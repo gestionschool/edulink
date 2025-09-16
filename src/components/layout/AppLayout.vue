@@ -25,9 +25,7 @@
       <!-- Colonne principale -->
       <div class="flex-1 min-w-0 flex flex-col min-h-0">
         <Navbar
-          :dark="isDark"
           @toggle-sidebar="sidebarOpen = true"
-          @toggle-theme="toggleTheme"
         />
 
         <!-- Contenu scrollable -->
@@ -47,7 +45,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import Navbar from './Navbar.vue'
 import Sidebar from './Sidebar.vue'
 import AppFooter from './AppFooter.vue'
@@ -55,25 +53,11 @@ import AppFooter from './AppFooter.vue'
 const sidebarOpen = ref(false)
 const isDark = ref(false)
 
-function applyTheme(dark) {
-  document.documentElement.classList.toggle('dark', dark)
-}
 
-function toggleTheme() {
-  isDark.value = !isDark.value
-  applyTheme(isDark.value)
-  localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
-}
 
 function closeIfMobile() {
   sidebarOpen.value = false
 }
-
-onMounted(() => {
-  const saved = localStorage.getItem('theme')
-  isDark.value = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
-  applyTheme(isDark.value)
-})
 </script>
 
 <style scoped>

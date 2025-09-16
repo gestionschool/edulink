@@ -1,4 +1,4 @@
-<!-- components/layout/Sidebar.vue -->
+<!-- src/components/layout/Sidebar.vue -->
 <template>
   <div class="h-full flex flex-col">
     <!-- Brand -->
@@ -13,72 +13,20 @@
 
     <!-- Navigation -->
     <nav class="flex-1 overflow-y-auto py-3">
-      <!-- Section Général -->
-      <div class="px-3 py-2">
+      <div v-for="section in filteredSections" :key="section.title" class="px-3 py-2">
         <div class="px-2 mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
-          Général
+          {{ section.title }}
         </div>
         <div class="space-y-1">
-          <RouterLink :to="'/dashboard'" :class="linkClass('/dashboard')" @click="emitNavigate">
-            <IconHome /><span>Tableau de bord</span>
-          </RouterLink>
-          <RouterLink :to="'/professeurs'" :class="linkClass('/professeurs')" @click="emitNavigate">
-            <IconUsers /><span>Professeurs</span>
-          </RouterLink>
-          <RouterLink :to="'/etudiants'" :class="linkClass('/etudiants')" @click="emitNavigate">
-            <IconStudent /><span>Étudiants</span>
-          </RouterLink>
-          <RouterLink :to="'/classes'" :class="linkClass('/classes')" @click="emitNavigate">
-            <IconClassroom /><span>Classes</span>
-          </RouterLink>
-        </div>
-      </div>
-
-      <!-- Section Pédagogie -->
-      <div class="px-3 py-2">
-        <div class="px-2 mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
-          Pédagogie
-        </div>
-        <div class="space-y-1">
-          <RouterLink :to="'/cours'" :class="linkClass('/cours')" @click="emitNavigate">
-            <IconBook /><span>Cours</span>
-          </RouterLink>
-          <RouterLink :to="'/devoirs'" :class="linkClass('/devoirs')" @click="emitNavigate">
-            <IconTask /><span>Devoirs</span>
-          </RouterLink>
-          <RouterLink :to="'/interros'" :class="linkClass('/interros')" @click="emitNavigate">
-            <IconQuiz /><span>Interrogations</span>
-          </RouterLink>
-        </div>
-      </div>
-
-      <!-- Section Périodicité -->
-      <div class="px-3 py-2">
-        <div class="px-2 mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
-          Périodicité
-        </div>
-        <div class="space-y-1">
-          <RouterLink :to="'/periodes'" :class="linkClass('/periodes')" @click="emitNavigate">
-            <IconCalendar /><span>Périodes</span>
-          </RouterLink>
-          <RouterLink :to="'/semestres'" :class="linkClass('/semestres')" @click="emitNavigate">
-            <IconCalendar /><span>Semestres</span>
-          </RouterLink>
-        </div>
-      </div>
-
-      <!-- Section Administration -->
-      <div class="px-3 py-2">
-        <div class="px-2 mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
-          Administration
-        </div>
-        <div class="space-y-1">
-          <RouterLink :to="'/admin/users'" :class="linkClass('/admin/users')" @click="emitNavigate">
-            <IconShield /><span>Utilisateurs</span>
-          </RouterLink>
-          <RouterLink :to="'/admin/create-compte'" :class="linkClass('/admin/create-compte')" @click="emitNavigate">
-            <IconPlus /><span>Créer un compte</span>
-          </RouterLink>
+          <NavItem
+            v-for="item in section.items"
+            :key="item.to"
+            :to="item.to"
+            :prefix="item.prefix"
+            :label="item.label"
+            :icon="item.icon"
+            @navigate="emitNavigate"
+          />
         </div>
       </div>
     </nav>
@@ -86,22 +34,67 @@
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router'
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
+import { useAuthStore } from '@/stores/useAuth'
+import NavItem from './NavItem.vue'
 
-const route = useRoute()
+// Définition du menu + rôles autorisés par item
+// Omettre 'roles' => visible par tous
+const sections = [
+  {
+    title: 'Général',
+    items: [
+      { to: '/dashboard',  prefix: '/dashboard',  label: 'Tableau de bord', icon: 'home' },
+      { to: '/professeurs',prefix: '/professeurs',label: 'Professeurs',     icon: 'users' },
+      { to: '/etudiants',  prefix: '/etudiants',  label: 'Étudiants',       icon: 'student' },
+      { to: '/classes',    prefix: '/classes',    label: 'Classes',         icon: 'classroom' }
+    ]
+  },
+  {
+    title: 'Pédagogie',
+    items: [
+      { to: '/cours',    prefix: '/cours',    label: 'Cours',          icon: 'book' },
+      { to: '/devoirs',  prefix: '/devoirs',  label: 'Devoirs',        icon: 'task' },
+      { to: '/interros', prefix: '/interros', label: 'Interrogations', icon: 'quiz' }
+    ]
+  },
+  {
+    title: 'Périodicité',
+    items: [
+      // Périodicité accessible à admin + gestion
+      { to: '/admin/periodes',  prefix: '/admin/periodes',  label: 'Périodes',  icon: 'calendar', roles: ['admin', 'gestion'] },
+      { to: '/admin/semestres', prefix: '/admin/semestres', label: 'Semestres', icon: 'calendar', roles: ['admin', 'gestion'] }
+    ]
+  },
+  {
+    title: 'Administration',
+    items: [
+      // Admin only
+      { to: '/admin/utilisateurs', prefix: '/admin/utilisateurs', label: 'Utilisateurs',    icon: 'shield', roles: ['admin'] },
+      { to: '/admin/creer-compte', prefix: '/admin/creer-compte', label: 'Créer un compte', icon: 'plus',   roles: ['admin'] }
+    ]
+  }
+]
 
-function linkClass(prefix) {
-  const active = route.path.startsWith(prefix)
-  return [
-    'group flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors',
-    active
-      ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300'
-      : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
-  ]
-}
+// Rôle actuel (Pinia)
+const auth = useAuthStore()
+const currentRole = computed(() => auth.user?.role || 'gestion')
+
+// Filtrage des sections/items selon le rôle
+const filteredSections = computed(() =>
+  sections
+    .map(sec => ({
+      ...sec,
+      items: sec.items.filter(item => {
+        if (!item.roles) return true // visible par tous
+        return item.roles.includes(currentRole.value)
+      })
+    }))
+    .filter(sec => sec.items.length > 0)
+)
 
 function emitNavigate() {
-  // Le parent AppLayout ferme le drawer mobile via @click.self sur l’overlay.
+  // Le parent AppLayout peut fermer le drawer mobile au clic (sur mobile)
 }
 </script>
