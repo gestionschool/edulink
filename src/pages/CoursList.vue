@@ -7,8 +7,8 @@
           <template #actions>
             <button
               class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white
-                    hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500
-                    dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:focus:ring-indigo-400"
+                     hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500
+                     dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:focus:ring-indigo-400"
               @click="openCreate()"
             >
               Nouveau
@@ -18,50 +18,34 @@
 
         <!-- Barre de filtres -->
         <FilterBar v-model="filters" @reset="onResetFilters">
-          <select
-            v-model="filters.professeur"
-            class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                  text-gray-900 shadow-sm
-                  focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                  dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100
-                  dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
-          >
+          <select v-model="filters.professeur"
+                  class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
+                         text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                         dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:focus:border-indigo-400 dark:focus:ring-indigo-400">
             <option value="">Professeur</option>
-            <option>Kabeya</option>
-            <option>Ngoma</option>
+            <option v-for="p in profOptions" :key="p" :value="p">{{ p }}</option>
           </select>
 
-          <select
-            v-model="filters.classe"
-            class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                  text-gray-900 shadow-sm
-                  focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                  dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100
-                  dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
-          >
+          <select v-model="filters.classe"
+                  class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
+                         text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                         dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:focus:border-indigo-400 dark:focus:ring-indigo-400">
             <option value="">Classe</option>
-            <option>6ème A</option>
-            <option>6ème B</option>
+            <option v-for="cl in classeOptions" :key="cl" :value="cl">{{ cl }}</option>
           </select>
 
-          <select
-            v-model="filters.periode"
-            class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                  text-gray-900 shadow-sm
-                  focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                  dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100
-                  dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
-          >
-            <option value="">Période</option>
-            <option>Trimestre 1</option>
-            <option>Trimestre 2</option>
-            <option>Trimestre 3</option>
+          <select v-model.number="filters.periodeId"
+                  class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
+                         text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                         dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:focus:border-indigo-400 dark:focus:ring-indigo-400">
+            <option :value="''">Période</option>
+            <option v-for="p in periodeOptions" :key="p.id" :value="p.id">{{ p.label }}</option>
           </select>
 
           <button
             class="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium
-                  text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500
-                  dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700 dark:focus:ring-indigo-400"
+                   text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500
+                   dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700 dark:focus:ring-indigo-400"
             @click="applyFilters"
           >
             Filtrer
@@ -69,10 +53,8 @@
         </FilterBar>
 
         <!-- Tableau -->
-        <div
-          class="rounded-xl border border-gray-200 bg-white p-3 shadow-sm
-                dark:border-gray-700 dark:bg-gray-900"
-        >
+        <div class="rounded-xl border border-gray-200 bg-white p-3 shadow-sm
+                    dark:border-gray-700 dark:bg-gray-900">
           <DataTable
             :rows="rows"
             :headers="headers"
@@ -92,75 +74,75 @@
           <div class="grid gap-3 sm:grid-cols-2">
             <label class="text-gray-700 dark:text-gray-200">
               Code
-              <input
-                v-model="form.code"
-                class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
-                required
-              />
+              <input v-model="form.code"
+                     class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
+                            text-gray-900 shadow-sm placeholder-gray-500
+                            focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                            dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
+                            dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                     required />
             </label>
+
             <label class="text-gray-700 dark:text-gray-200">
               Intitulé
-              <input
-                v-model="form.intitule"
-                class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
-                required
-              />
+              <input v-model="form.intitule"
+                     class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
+                            text-gray-900 shadow-sm placeholder-gray-500
+                            focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                            dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
+                            dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                     required />
             </label>
+
             <label class="text-gray-700 dark:text-gray-200">
               Classe
-              <input
-                v-model="form.classe"
-                class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
-                required
-              />
+              <input v-model="form.classe" list="classe-list"
+                     class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
+                            text-gray-900 shadow-sm placeholder-gray-500
+                            focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                            dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
+                            dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                     required />
+              <datalist id="classe-list">
+                <option v-for="cl in classeOptions" :key="cl" :value="cl" />
+              </datalist>
             </label>
+
             <label class="text-gray-700 dark:text-gray-200">
               Professeur
-              <input
-                v-model="form.professeur"
-                class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
-                required
-              />
+              <input v-model="form.professeur" list="prof-list"
+                     class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
+                            text-gray-900 shadow-sm placeholder-gray-500
+                            focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                            dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
+                            dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                     required />
+              <datalist id="prof-list">
+                <option v-for="p in profOptions" :key="p" :value="p" />
+              </datalist>
             </label>
+
             <label class="text-gray-700 dark:text-gray-200">
               Volume horaire
-              <input
-                v-model.number="form.volume"
-                type="number"
-                min="1"
-                class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
-              />
+              <input v-model.number="form.volume" type="number" min="1"
+                     class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
+                            text-gray-900 shadow-sm placeholder-gray-500
+                            focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                            dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
+                            dark:focus:border-indigo-400 dark:focus:ring-indigo-400" />
             </label>
+
             <label class="text-gray-700 dark:text-gray-200">
               Période
-              <input
-                v-model="form.periode"
-                class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
-              />
+              <select v-model.number="form.periodeId"
+                      class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
+                             text-gray-900 shadow-sm
+                             focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                             dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100
+                             dark:focus:border-indigo-400 dark:focus:ring-indigo-400">
+                <option :value="null">—</option>
+                <option v-for="p in periodeOptions" :key="p.id" :value="p.id">{{ p.label }}</option>
+              </select>
             </label>
           </div>
         </CrudModal>
@@ -170,12 +152,15 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, computed } from 'vue'
+import { useSchoolStore } from '@/stores/school'
 import PageHeader from '@/components/PageHeader.vue'
 import FilterBar from '@/components/FilterBar.vue'
 import DataTable from '@/components/DataTable.vue'
 import CrudModal from '@/components/CrudModal.vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
+
+const school = useSchoolStore()
 
 const headers = [
   { key: 'code',       label: 'Code' },
@@ -183,92 +168,75 @@ const headers = [
   { key: 'classe',     label: 'Classe' },
   { key: 'professeur', label: 'Professeur' },
   { key: 'volume',     label: 'Volume h.' },
-  { key: 'periode',    label: 'Période' }
+  { key: 'periode',    label: 'Période' }, // affichage libellé
 ]
 
 // Filtres
-const filters = ref({ q: '', professeur: '', classe: '', periode: '' })
+const filters = ref({ q: '', professeur: '', classe: '', periodeId: '' })
 
-// Données
-const allRows = ref([])
-const rows = ref([])
+// Options
+const profOptions    = computed(() => school.uniqueCoursProfesseurs)
+const classeOptions  = computed(() => school.uniqueCoursClasses)
+const periodeOptions = computed(() => school.periodes) // [{id,label,...}]
+
+// Utils
+function normalize (s) {
+  return String(s || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '')
+}
+const periodeLabel = (id) => school.getPeriodeLabel(id)
+
+// Lignes (affiche libellé de période)
+const rows = computed(() => {
+  const q  = normalize(filters.value.q)
+  const fP = filters.value.professeur
+  const fC = filters.value.classe
+  const fPe= filters.value.periodeId === '' ? null : Number(filters.value.periodeId)
+
+  return school.cours
+    .filter(r => {
+      const hay = normalize(`${r.code} ${r.intitule} ${r.classe} ${r.professeur} ${r.volume} ${periodeLabel(r.periodeId)}`)
+      const okQ  = q ? hay.includes(q) : true
+      const okPr = fP ? r.professeur === fP : true
+      const okCl = fC ? r.classe === fC : true
+      const okPe = fPe ? r.periodeId === fPe : true
+      return okQ && okPr && okCl && okPe
+    })
+    .map(r => ({
+      ...r,
+      periode: periodeLabel(r.periodeId), // colonne affichée
+    }))
+})
 
 // Modal + Form
 const modalOpen = ref(false)
-const form = ref({ id: null, code: '', intitule: '', classe: '', professeur: '', volume: 0, periode: '' })
+const form = ref({ id: null, code: '', intitule: '', classe: '', professeur: '', volume: 0, periodeId: null })
 
-/* -------- CRUD/mock + load -------- */
-function load () {
-  allRows.value = mockData()
-  applyFilters()
+function onResetFilters () {
+  filters.value = { q: '', professeur: '', classe: '', periodeId: '' }
 }
+
 function openCreate () {
-  form.value = { id: null, code: '', intitule: '', classe: '', professeur: '', volume: 0, periode: '' }
+  form.value = { id: null, code: '', intitule: '', classe: '', professeur: '', volume: 0, periodeId: null }
   modalOpen.value = true
 }
 function openEdit (r) {
-  form.value = { ...r }
+  form.value = { id: r.id, code: r.code, intitule: r.intitule, classe: r.classe, professeur: r.professeur, volume: r.volume, periodeId: r.periodeId ?? null }
   modalOpen.value = true
 }
-async function save () {
-  form.value.id ? await update() : await create()
+function save () {
+  form.value.id ? update() : create()
   modalOpen.value = false
-  load()
 }
-async function create () { /* POST /cours */ }
-async function update () { /* PUT  /cours/:id */ }
-async function removeRow (r) {
-  // DELETE /cours/:id
-  allRows.value = allRows.value.filter(x => x.id !== r.id)
-  applyFilters()
+function create () {
+  school.addCours({ ...form.value })
 }
-
-/* ------------- Filtres ------------- */
-function onResetFilters () {
-  filters.value = { q: '', professeur: '', classe: '', periode: '' }
-  applyFilters()
+function update () {
+  school.updateCours({ ...form.value })
+}
+function removeRow (r) {
+  school.removeCours(r.id)
 }
 
-// Normalisation : insensible aux accents/majuscules
-function normalize (s) {
-  return String(s || '')
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '')
-}
-
-function applyFilters () {
-  const q = normalize(filters.value.q)
-  const fProf = filters.value.professeur
-  const fClasse = filters.value.classe
-  const fPeriode = filters.value.periode
-
-  rows.value = allRows.value.filter(r => {
-    // recherche plein-texte (code, intitulé, classe, professeur, période, volume)
-    const haystack = normalize(`${r.code} ${r.intitule} ${r.classe} ${r.professeur} ${r.periode} ${r.volume}`)
-    const matchesQ = q ? haystack.includes(q) : true
-    const matchesProf = fProf ? r.professeur === fProf : true
-    const matchesClasse = fClasse ? r.classe === fClasse : true
-    const matchesPeriode = fPeriode ? r.periode === fPeriode : true
-    return matchesQ && matchesProf && matchesClasse && matchesPeriode
-  })
-}
-
-// Auto-filtre (debounce léger)
-let t
-watch(filters, () => {
-  clearTimeout(t)
-  t = setTimeout(applyFilters, 150)
-}, { deep: true })
-
-/* ------------- Données mock ------------- */
-function mockData () {
-  return [
-    { id: 1, code: 'MAT101', intitule: 'Math Générales', classe: '6ème A', professeur: 'Kabeya', volume: 48, periode: 'Trimestre 1' },
-    { id: 2, code: 'PHY102', intitule: 'Physique I',     classe: '6ème B', professeur: 'Ngoma',  volume: 36, periode: 'Trimestre 1' },
-    { id: 3, code: 'FRN103', intitule: 'Français Oral',  classe: '6ème A', professeur: 'Kabeya', volume: 24, periode: 'Trimestre 2' }
-  ]
-}
-
-load()
+// compat bouton "Filtrer" (rows est computed)
+function applyFilters () { /* no-op */ }
 </script>

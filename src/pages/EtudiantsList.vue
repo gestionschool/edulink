@@ -7,8 +7,8 @@
           <template #actions>
             <button
               class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white
-                    hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500
-                    dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:focus:ring-indigo-400"
+                     hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500
+                     dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:focus:ring-indigo-400"
               @click="openCreate()"
             >
               Nouveau
@@ -21,23 +21,22 @@
           <select
             v-model="filters.classe"
             class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                  text-gray-900 shadow-sm
-                  focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                  dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100
-                  dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                   text-gray-900 shadow-sm
+                   focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                   dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100
+                   dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
           >
             <option value="">Classe</option>
-            <option>6ème A</option>
-            <option>6ème B</option>
+            <option v-for="c in classeOptions" :key="c" :value="c">{{ c }}</option>
           </select>
 
           <select
             v-model="filters.statut"
             class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                  text-gray-900 shadow-sm
-                  focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                  dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100
-                  dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                   text-gray-900 shadow-sm
+                   focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                   dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100
+                   dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
           >
             <option value="">Statut</option>
             <option>Actif</option>
@@ -46,9 +45,9 @@
 
           <button
             class="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium
-                  text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500
-                  dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700 dark:focus:ring-indigo-400"
-            @click="applyFilters"
+                   text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500
+                   dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700 dark:focus:ring-indigo-400"
+            @click="noop"
           >
             Filtrer
           </button>
@@ -57,7 +56,7 @@
         <!-- Tableau -->
         <div
           class="rounded-xl border border-gray-200 bg-white p-3 shadow-sm
-                dark:border-gray-700 dark:bg-gray-900"
+                 dark:border-gray-700 dark:bg-gray-900"
         >
           <DataTable
             :rows="rows"
@@ -81,80 +80,89 @@
               <input
                 v-model="form.matricule"
                 class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                       text-gray-900 shadow-sm placeholder-gray-500
+                       focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                       dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
+                       dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
                 required
               />
             </label>
+
             <label class="text-gray-700 dark:text-gray-200">
               Nom
               <input
                 v-model="form.nom"
                 class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                       text-gray-900 shadow-sm placeholder-gray-500
+                       focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                       dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
+                       dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
                 required
               />
             </label>
+
             <label class="text-gray-700 dark:text-gray-200">
               Prénom
               <input
                 v-model="form.prenom"
                 class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                       text-gray-900 shadow-sm placeholder-gray-500
+                       focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                       dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
+                       dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
                 required
               />
             </label>
+
             <label class="text-gray-700 dark:text-gray-200">
               Classe
-              <input
+              <select
                 v-model="form.classe"
                 class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                       text-gray-900 shadow-sm
+                       focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                       dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100
+                       dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
                 required
-              />
+              >
+                <option disabled value="">— choisir —</option>
+                <option v-for="c in classeOptions" :key="`form-${c}`" :value="c">{{ c }}</option>
+              </select>
             </label>
+
             <label class="text-gray-700 dark:text-gray-200">
               Tuteur
               <input
                 v-model="form.tuteur"
                 class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                       text-gray-900 shadow-sm placeholder-gray-500
+                       focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                       dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
+                       dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
               />
             </label>
+
             <label class="text-gray-700 dark:text-gray-200">
               Téléphone
               <input
                 v-model="form.telephone"
                 class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                       text-gray-900 shadow-sm placeholder-gray-500
+                       focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                       dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
+                       dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
               />
             </label>
+
             <label class="text-gray-700 dark:text-gray-200">
               Statut
               <select
                 v-model="form.statut"
                 class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                       text-gray-900 shadow-sm
+                       focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                       dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100
+                       dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
               >
                 <option>Actif</option>
                 <option>Suspendu</option>
@@ -168,13 +176,17 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, computed } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useSchoolStore } from '@/stores/school'
+
 import PageHeader from '@/components/PageHeader.vue'
 import FilterBar from '@/components/FilterBar.vue'
 import DataTable from '@/components/DataTable.vue'
 import CrudModal from '@/components/CrudModal.vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
 
+/* ================= colonnes ================= */
 const headers = [
   { key: 'matricule', label: 'Matricule' },
   { key: 'nom',       label: 'Nom' },
@@ -185,59 +197,25 @@ const headers = [
   { key: 'statut',    label: 'Statut' }
 ]
 
-// Filtres
+/* ================= store ================= */
+const school = useSchoolStore()
+const { students, classes, uniqueStudentClasses } = storeToRefs(school)
+
+/* IDs <-> labels */
+const classeIdToLabel = computed(() =>
+  Object.fromEntries(classes.value.map(c => [c.id, c.label]))
+)
+const labelToClasseId = computed(() =>
+  Object.fromEntries(classes.value.map(c => [c.label, c.id]))
+)
+
+/* Options de filtre / sélecteur */
+const classeOptions = computed(() => uniqueStudentClasses.value)
+
+/* ================= filtres ================= */
 const filters = ref({ q: '', classe: '', statut: '' })
 
-// Données
-const allRows = ref([])
-const rows = ref([])
-
-// Modal + Form
-const modalOpen = ref(false)
-const form = ref({
-  id: null,
-  matricule: '',
-  nom: '',
-  prenom: '',
-  classe: '',
-  tuteur: '',
-  telephone: '',
-  statut: 'Actif'
-})
-
-// Chargement / CRUD (mock pour l’instant)
-function load () {
-  allRows.value = mockData()
-  applyFilters()
-}
-function openCreate () {
-  form.value = { id: null, matricule: '', nom: '', prenom: '', classe: '', tuteur: '', telephone: '', statut: 'Actif' }
-  modalOpen.value = true
-}
-function openEdit (r) {
-  form.value = { ...r }
-  modalOpen.value = true
-}
-async function save () {
-  form.value.id ? await update() : await create()
-  modalOpen.value = false
-  load()
-}
-async function create () { /* POST /etudiants */ }
-async function update () { /* PUT  /etudiants/:id */ }
-async function removeRow (r) {
-  // DELETE /etudiants/:id
-  allRows.value = allRows.value.filter(x => x.id !== r.id)
-  applyFilters()
-}
-
-/* --------- Logique de filtre --------- */
-function onResetFilters () {
-  filters.value = { q: '', classe: '', statut: '' }
-  applyFilters()
-}
-
-// Normalisation (insensible aux accents/majuscules)
+/* Normalisation recherche */
 function normalize (s) {
   return String(s || '')
     .toLowerCase()
@@ -245,37 +223,79 @@ function normalize (s) {
     .replace(/\p{Diacritic}/gu, '')
 }
 
-function applyFilters () {
+/* ================= donnée vue (dénormalisée) =================
+   On expose aux tableaux un objet avec 'classe' (label) et valeurs par défaut. */
+const sourceRows = computed(() =>
+  students.value.map(s => ({
+    id: s.id,
+    matricule: s.matricule || '',
+    nom: s.nom || '',
+    prenom: s.prenom || '',
+    classe: classeIdToLabel.value[s.classeId] || s.classe || '',
+    tuteur: s.tuteur || '',
+    telephone: s.telephone || '',
+    statut: s.statut || 'Actif'
+  }))
+)
+
+/* ================= filtrage réactif ================= */
+const rows = computed(() => {
   const q = normalize(filters.value.q)
   const fClasse = filters.value.classe
   const fStatut = filters.value.statut
 
-  rows.value = allRows.value.filter(r => {
-    // Champs recherchés par 'q' (matricule, nom, prénom, classe, tuteur, téléphone)
-    const haystack = normalize(`${r.matricule} ${r.nom} ${r.prenom} ${r.classe} ${r.tuteur} ${r.telephone}`)
+  return sourceRows.value.filter(r => {
+    const haystack = normalize(`${r.matricule} ${r.nom} ${r.prenom} ${r.classe} ${r.tuteur} ${r.telephone} ${r.statut}`)
     const matchesQ = q ? haystack.includes(q) : true
     const matchesClasse = fClasse ? r.classe === fClasse : true
     const matchesStatut = fStatut ? r.statut === fStatut : true
     return matchesQ && matchesClasse && matchesStatut
   })
+})
+
+function onResetFilters () {
+  filters.value = { q: '', classe: '', statut: '' }
+}
+function noop(){ /* bouton "Filtrer" laissé pour l'UI – les filtres sont réactifs */ }
+
+/* ================= modal / form ================= */
+const modalOpen = ref(false)
+const form = ref({
+  id: null,
+  matricule: '',
+  nom: '',
+  prenom: '',
+  classe: '',     // <- label (converti en classeId au save)
+  tuteur: '',
+  telephone: '',
+  statut: 'Actif'
+})
+
+function openCreate () {
+  form.value = { id: null, matricule: '', nom: '', prenom: '', classe: '', tuteur: '', telephone: '', statut: 'Actif' }
+  modalOpen.value = true
+}
+function openEdit (r) {
+  // r vient de la vue (avec label de classe)
+  form.value = { ...r }
+  modalOpen.value = true
 }
 
-// Auto-filtre avec léger debounce
-let t
-watch(filters, () => {
-  clearTimeout(t)
-  t = setTimeout(applyFilters, 150)
-}, { deep: true })
+async function save () {
+  const payload = { ...form.value }
+  // map label -> ID
+  const classeId = labelToClasseId.value[payload.classe] ?? null
 
-/* --------- Données mock --------- */
-function mockData () {
-  return [
-    { id: 1, matricule: 'ETD001', nom: 'Kazi',  prenom: 'Mira',  classe: '6ème A', tuteur: 'Mme K.',  telephone: '+243 970 000 001', statut: 'Actif'    },
-    { id: 2, matricule: 'ETD002', nom: 'Banza', prenom: 'Joël',  classe: '6ème A', tuteur: 'M. B.',   telephone: '+243 970 000 002', statut: 'Suspendu' },
-    { id: 3, matricule: 'ETD003', nom: 'Ilunga',prenom: 'Sarah', classe: '6ème B', tuteur: 'Mme I.',  telephone: '+243 970 000 003', statut: 'Actif'    },
-    { id: 4, matricule: 'ETD004', nom: 'Kasongo', prenom: 'Peter', classe: '6ème B', tuteur: 'M. K.', telephone: '+243 970 000 004', statut: 'Actif'    }
-  ]
+  if (payload.id) {
+    school.updateEtudiant({ id: payload.id, ...payload, classeId })
+  } else {
+    const newId = school.addEtudiant({ ...payload, classeId })
+    form.value.id = newId
+  }
+  modalOpen.value = false
 }
 
-load()
+async function removeRow (r) {
+  school.removeEtudiant(r.id)
+}
 </script>

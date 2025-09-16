@@ -36,7 +36,7 @@
 <script setup>
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useAuthStore } from '@/stores/useAuth'
+import { useAuthStore, ROLES } from '@/stores/useAuth'
 import NavItem from './NavItem.vue'
 
 // Définition du menu + rôles autorisés par item
@@ -45,10 +45,16 @@ const sections = [
   {
     title: 'Général',
     items: [
-      { to: '/dashboard',  prefix: '/dashboard',  label: 'Tableau de bord', icon: 'home' },
-      { to: '/professeurs',prefix: '/professeurs',label: 'Professeurs',     icon: 'users' },
-      { to: '/etudiants',  prefix: '/etudiants',  label: 'Étudiants',       icon: 'student' },
-      { to: '/classes',    prefix: '/classes',    label: 'Classes',         icon: 'classroom' }
+      { to: '/dashboard',  prefix: '/dashboard',  label: 'Tableau de bord', icon: 'home' , 
+      roles:[ROLES.ADMIN_GENERALE, ROLES.ADMIN_ECOLE, ROLES.PROFESSEUR, ROLES.ELEVE] },
+      { to: '/professeurs',prefix: '/professeurs',label: 'Professeurs',     icon: 'users' ,
+      roles:[ROLES.ADMIN_GENERALE, ROLES.ADMIN_ECOLE] },
+      { to: '/etudiants',  prefix: '/etudiants',  label: 'Étudiants',       icon: 'student' ,
+      roles:[ROLES.ADMIN_GENERALE, ROLES.ADMIN_ECOLE] },
+      { to: '/classes',    prefix: '/classes',    label: 'Classes',         icon: 'classroom' ,
+      roles:[ROLES.ADMIN_GENERALE, ROLES.ADMIN_ECOLE, ROLES.PROFESSEUR] },
+      { to:'/setup', prefix:'/setup', label:'Configuration', icon:'task',
+      roles:[ROLES.ADMIN_GENERALE, ROLES.ADMIN_ECOLE] }
     ]
   },
   {
@@ -63,16 +69,18 @@ const sections = [
     title: 'Périodicité',
     items: [
       // Périodicité accessible à admin + gestion
-      { to: '/admin/periodes',  prefix: '/admin/periodes',  label: 'Périodes',  icon: 'calendar', roles: ['admin', 'gestion'] },
-      { to: '/admin/semestres', prefix: '/admin/semestres', label: 'Semestres', icon: 'calendar', roles: ['admin', 'gestion'] }
+      { to: '/admin/periodes',  prefix: '/admin/periodes',  label: 'Périodes',  icon: 'calendar', roles: [ROLES.ADMIN_GENERALE, ROLES.ADMIN_ECOLE] },
+      { to: '/admin/semestres', prefix: '/admin/semestres', label: 'Semestres', icon: 'calendar', roles: [ROLES.ADMIN_GENERALE, ROLES.ADMIN_ECOLE] }
     ]
   },
   {
     title: 'Administration',
     items: [
       // Admin only
-      { to: '/admin/utilisateurs', prefix: '/admin/utilisateurs', label: 'Utilisateurs',    icon: 'shield', roles: ['admin'] },
-      { to: '/admin/creer-compte', prefix: '/admin/creer-compte', label: 'Créer un compte', icon: 'plus',   roles: ['admin'] }
+      { to: '/admin/utilisateurs', prefix: '/admin/utilisateurs', label: 'Utilisateurs',    icon: 'shield', roles: [ROLES.ADMIN_GENERALE] },
+      { to: '/admin/creer-compte', prefix: '/admin/creer-compte', label: 'Créer un compte', icon: 'plus',   roles: [ROLES.ADMIN_GENERALE] },
+      { to:'/admin/ecoles', prefix:'/admin/ecoles', label:'Écoles', icon:'shield',
+      roles:[ROLES.ADMIN_GENERALE] }
     ]
   }
 ]

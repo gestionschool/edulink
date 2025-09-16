@@ -1,234 +1,116 @@
-<!-- pages/EtudiantsList.vue -->
+<!-- src/pages/ExamensList.vue -->
 <template>
-  <AppLayout>
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
-      <div class="mx-auto max-w-6xl p-4 sm:p-6">
-        <PageHeader title="Étudiants">
-          <template #actions>
-            <button
-              class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white
-                    hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500
-                    dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:focus:ring-indigo-400"
-              @click="openCreate()"
-            >
-              Nouveau
-            </button>
-          </template>
-        </PageHeader>
+  <div>
+    <PageHeader title="Examens">
+      <template #actions>
+        <button v-if="canEditPedago" class="btn-primary" @click="openCreate()">Nouveau</button>
+      </template>
+    </PageHeader>
 
-        <!-- Barre de filtres -->
-        <FilterBar v-model="filters" @reset="onResetFilters">
-          <select
-            v-model="filters.classe"
-            class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                  text-gray-900 shadow-sm
-                  focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                  dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100
-                  dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
-          >
-            <option value="">Classe</option>
-            <option>6ème A</option>
-            <option>6ème B</option>
+    <FilterBar v-model="filters" @reset="filters={ q:'', cours:'', classe:'', date:'', session:'' }">
+      <input v-model="filters.cours"  class="input" placeholder="Cours…" list="cours-list" />
+      <datalist id="cours-list">
+        <option v-for="c in coursOptions" :key="c" :value="c" />
+      </datalist>
+
+      <input v-model="filters.classe" class="input" placeholder="Classe…" list="classe-list" />
+      <datalist id="classe-list">
+        <option v-for="cl in classeOptions" :key="cl" :value="cl" />
+      </datalist>
+
+      <input v-model="filters.date"   type="date" class="input" />
+
+      <select v-model="filters.session" class="input">
+        <option value="">Session</option>
+        <option v-for="s in sessionOptions" :key="s" :value="s">{{ s }}</option>
+      </select>
+
+      <!-- bouton conservé pour compat : le filtrage est réactif -->
+      <button class="btn-outline" @click="applyFilters()">Filtrer</button>
+    </FilterBar>
+
+    <DataTable
+      :rows="rows"
+      :headers="headers"
+      idKey="id"
+      @edit="openEdit"
+      @remove="removeRow"
+    />
+
+    <CrudModal
+      :open="modalOpen"
+      :title="form.id?'Modifier examen':'Créer examen'"
+      @close="modalOpen=false"
+      @submit="save"
+    >
+      <div class="grid sm:grid-cols-2 gap-3">
+        <label>Titre
+          <input v-model="form.titre" class="input" required/>
+        </label>
+
+        <label>Type
+          <select v-model="form.type" class="input">
+            <option>Final</option>
+            <option>Partiel</option>
           </select>
+        </label>
 
-          <select
-            v-model="filters.statut"
-            class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                  text-gray-900 shadow-sm
-                  focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                  dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100
-                  dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
-          >
-            <option value="">Statut</option>
-            <option>Actif</option>
-            <option>Suspendu</option>
+        <label>Date
+          <input v-model="form.date" type="date" class="input" required/>
+        </label>
+
+        <label>Cours
+          <input v-model="form.cours" class="input" list="cours-list" required/>
+        </label>
+
+        <label>Classe
+          <input v-model="form.classe" class="input" list="classe-list" required/>
+        </label>
+
+        <label>Barème
+          <input v-model.number="form.bareme" type="number" class="input" min="1"/>
+        </label>
+
+        <label>Session
+          <select v-model="form.session" class="input">
+            <option>Normale</option>
+            <option>Rattrapage</option>
           </select>
-
-          <button
-            class="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium
-                  text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500
-                  dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700 dark:focus:ring-indigo-400"
-            @click="applyFilters"
-          >
-            Filtrer
-          </button>
-        </FilterBar>
-
-        <!-- Tableau -->
-        <div
-          class="rounded-xl border border-gray-200 bg-white p-3 shadow-sm
-                dark:border-gray-700 dark:bg-gray-900"
-        >
-          <DataTable
-            :rows="rows"
-            :headers="headers"
-            idKey="id"
-            @edit="openEdit"
-            @remove="removeRow"
-          />
-        </div>
-
-        <!-- Modal CRUD -->
-        <CrudModal
-          :open="modalOpen"
-          :title="form.id ? 'Modifier étudiant' : 'Créer étudiant'"
-          @close="modalOpen=false"
-          @submit="save"
-        >
-          <div class="grid gap-3 sm:grid-cols-2">
-            <label class="text-gray-700 dark:text-gray-200">
-              Matricule
-              <input
-                v-model="form.matricule"
-                class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
-                required
-              />
-            </label>
-            <label class="text-gray-700 dark:text-gray-200">
-              Nom
-              <input
-                v-model="form.nom"
-                class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
-                required
-              />
-            </label>
-            <label class="text-gray-700 dark:text-gray-200">
-              Prénom
-              <input
-                v-model="form.prenom"
-                class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
-                required
-              />
-            </label>
-            <label class="text-gray-700 dark:text-gray-200">
-              Classe
-              <input
-                v-model="form.classe"
-                class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
-                required
-              />
-            </label>
-            <label class="text-gray-700 dark:text-gray-200">
-              Tuteur
-              <input
-                v-model="form.tuteur"
-                class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
-              />
-            </label>
-            <label class="text-gray-700 dark:text-gray-200">
-              Téléphone
-              <input
-                v-model="form.telephone"
-                class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
-              />
-            </label>
-            <label class="text-gray-700 dark:text-gray-200">
-              Statut
-              <select
-                v-model="form.statut"
-                class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
-              >
-                <option>Actif</option>
-                <option>Suspendu</option>
-              </select>
-            </label>
-          </div>
-        </CrudModal>
+        </label>
       </div>
-    </div>
-  </AppLayout>
+    </CrudModal>
+  </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, computed } from 'vue'
+import { useAcl } from '@/composables/useAcl'
+import { useSchoolStore } from '@/stores/school'
 import PageHeader from '@/components/PageHeader.vue'
 import FilterBar from '@/components/FilterBar.vue'
 import DataTable from '@/components/DataTable.vue'
 import CrudModal from '@/components/CrudModal.vue'
-import AppLayout from '@/components/layout/AppLayout.vue'
+
+const { canEditPedago } = useAcl()
+const school = useSchoolStore()
 
 const headers = [
-  { key:'matricule', label:'Matricule' },
-  { key:'nom',       label:'Nom' },
-  { key:'prenom',    label:'Prénom' },
-  { key:'classe',    label:'Classe' },
-  { key:'tuteur',    label:'Tuteur' },
-  { key:'telephone', label:'Téléphone' },
-  { key:'statut',    label:'Statut' }
+  { key:'titre',  label:'Titre'  },
+  { key:'type',   label:'Type'   },
+  { key:'date',   label:'Date'   },
+  { key:'cours',  label:'Cours'  },
+  { key:'classe', label:'Classe' },
+  { key:'bareme', label:'Barème' },
+  { key:'session',label:'Session'}
 ]
 
-// Filtres
-const filters = ref({ q:'', classe:'', statut:'' })
+const filters = ref({ q:'', cours:'', classe:'', date:'', session:'' })
 
-// Données
-const allRows = ref([])
-const rows = ref([])
+const coursOptions   = computed(() => school.uniqueExamCours)
+const classeOptions  = computed(() => school.uniqueExamClasses)
+const sessionOptions = computed(() => school.uniqueExamSessions)
 
-// Modal + Form
-const modalOpen = ref(false)
-const form = ref({ id:null, matricule:'', nom:'', prenom:'', classe:'', tuteur:'', telephone:'', statut:'Actif' })
-
-/* -------- CRUD/mock + load -------- */
-function load () {
-  allRows.value = mockData()
-  applyFilters()
-}
-function openCreate () {
-  form.value = { id:null, matricule:'', nom:'', prenom:'', classe:'', tuteur:'', telephone:'', statut:'Actif' }
-  modalOpen.value = true
-}
-function openEdit (r) {
-  form.value = { ...r }
-  modalOpen.value = true
-}
-async function save () {
-  form.value.id ? await update() : await create()
-  modalOpen.value = false
-  load()
-}
-async function create () { /* POST /etudiants */ }
-async function update () { /* PUT  /etudiants/:id */ }
-async function removeRow (r) {
-  // DELETE /etudiants/:id
-  allRows.value = allRows.value.filter(x => x.id !== r.id)
-  applyFilters()
-}
-
-/* ------------- Filtres ------------- */
-function onResetFilters () {
-  filters.value = { q:'', classe:'', statut:'' }
-  applyFilters()
-}
-
-// Normalisation : insensible aux accents/majuscules
+// util pour recherche insensible aux accents/majuscules
 function normalize (s) {
   return String(s || '')
     .toLowerCase()
@@ -236,39 +118,51 @@ function normalize (s) {
     .replace(/\p{Diacritic}/gu, '')
 }
 
-function applyFilters () {
-  const q = normalize(filters.value.q)
-  const fClasse = normalize(filters.value.classe)
-  const fStatut = filters.value.statut
+// Lignes filtrées (réactif)
+const rows = computed(() => {
+  const q   = normalize(filters.value.q)
+  const fC  = normalize(filters.value.cours)
+  const fCl = normalize(filters.value.classe)
+  const fD  = filters.value.date
+  const fS  = filters.value.session
 
-  rows.value = allRows.value.filter(r => {
-    // Recherche plein-texte (matricule, nom, prénom, classe, tuteur, téléphone, statut)
-    const haystack = normalize(`${r.matricule} ${r.nom} ${r.prenom} ${r.classe} ${r.tuteur} ${r.telephone} ${r.statut}`)
-    const matchesQ = q ? haystack.includes(q) : true
-
-    // Spécifiques
-    const matchesClasse = fClasse ? normalize(r.classe).includes(fClasse) : true
-    const matchesStatut = fStatut ? r.statut === fStatut : true
-
-    return matchesQ && matchesClasse && matchesStatut
+  return school.examens.filter(r => {
+    const hay = normalize(`${r.titre} ${r.type} ${r.cours} ${r.classe} ${r.session} ${r.bareme}`)
+    const okQ   = q ? hay.includes(q) : true
+    const okC   = fC ? normalize(r.cours).includes(fC) : true
+    const okCl  = fCl ? normalize(r.classe).includes(fCl) : true
+    const okD   = fD ? r.date === fD : true
+    const okS   = fS ? r.session === fS : true
+    return okQ && okC && okCl && okD && okS
   })
+})
+
+// Modal + Form
+const modalOpen = ref(false)
+const form = ref({ id:null, titre:'', type:'Final', date:'', cours:'', classe:'', bareme:20, session:'Normale' })
+
+function openCreate(){
+  if(!canEditPedago.value) return
+  form.value = { id:null, titre:'', type:'Final', date:'', cours:'', classe:'', bareme:20, session:'Normale' }
+  modalOpen.value = true
+}
+function openEdit(r){
+  if(!canEditPedago.value) return
+  form.value = { ...r }
+  modalOpen.value = true
+}
+function save(){
+  if(!canEditPedago.value) return
+  form.value.id ? update() : create()
+  modalOpen.value = false
+}
+function create(){ school.addExamen({ ...form.value }) }
+function update(){ school.updateExamen({ ...form.value }) }
+function removeRow(r){
+  if(!canEditPedago.value) return
+  school.removeExamen(r.id)
 }
 
-// Auto-filtre (debounce léger)
-let t
-watch(filters, () => {
-  clearTimeout(t)
-  t = setTimeout(applyFilters, 150)
-}, { deep: true })
-
-/* ------------- Données mock ------------- */
-function mockData () {
-  return [
-    { id:1, matricule:'ETD001', nom:'Kazi',   prenom:'Mira',  classe:'6ème A', tuteur:'Mme K.', telephone:'+243 970 000 001', statut:'Actif' },
-    { id:2, matricule:'ETD002', nom:'Banza',  prenom:'Joël',  classe:'6ème A', tuteur:'M. B.',  telephone:'+243 970 000 002', statut:'Suspendu' },
-    { id:3, matricule:'ETD003', nom:'Ilunga', prenom:'Sarah', classe:'6ème B', tuteur:'Mme I.', telephone:'+243 970 000 003', statut:'Actif' }
-  ]
-}
-
-load()
+// compat bouton "Filtrer" (rows est computed, donc rien à faire)
+function applyFilters(){ /* no-op */ }
 </script>

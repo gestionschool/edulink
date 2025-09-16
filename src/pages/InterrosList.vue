@@ -7,8 +7,8 @@
           <template #actions>
             <button
               class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white
-                    hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500
-                    dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:focus:ring-indigo-400"
+                     hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500
+                     dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:focus:ring-indigo-400"
               @click="openCreate()"
             >
               Nouvelle
@@ -21,35 +21,45 @@
           <input
             v-model="filters.cours"
             class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                  text-gray-900 shadow-sm placeholder-gray-500
-                  focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                  dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400
-                  dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                   text-gray-900 shadow-sm placeholder-gray-500
+                   focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                   dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400
+                   dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
             placeholder="Cours…"
+            list="cours-list"
           />
+          <datalist id="cours-list">
+            <option v-for="c in coursOptions" :key="c" :value="c" />
+          </datalist>
+
           <input
             v-model="filters.classe"
             class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                  text-gray-900 shadow-sm placeholder-gray-500
-                  focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                  dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400
-                  dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                   text-gray-900 shadow-sm placeholder-gray-500
+                   focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                   dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400
+                   dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
             placeholder="Classe…"
+            list="classe-list"
           />
+          <datalist id="classe-list">
+            <option v-for="cl in classeOptions" :key="cl" :value="cl" />
+          </datalist>
+
           <input
             v-model="filters.date"
             type="date"
             class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                  text-gray-900 shadow-sm
-                  focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                  dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100
-                  dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                   text-gray-900 shadow-sm
+                   focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                   dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100
+                   dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
           />
 
           <button
             class="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium
-                  text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500
-                  dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700 dark:focus:ring-indigo-400"
+                   text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500
+                   dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700 dark:focus:ring-indigo-400"
             @click="applyFilters"
           >
             Filtrer
@@ -57,10 +67,8 @@
         </FilterBar>
 
         <!-- Tableau -->
-        <div
-          class="rounded-xl border border-gray-200 bg-white p-3 shadow-sm
-                dark:border-gray-700 dark:bg-gray-900"
-        >
+        <div class="rounded-xl border border-gray-200 bg-white p-3 shadow-sm
+                    dark:border-gray-700 dark:bg-gray-900">
           <DataTable
             :rows="rows"
             :headers="headers"
@@ -83,10 +91,10 @@
               <input
                 v-model="form.titre"
                 class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                       text-gray-900 shadow-sm placeholder-gray-500
+                       focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                       dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
+                       dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
                 required
               />
             </label>
@@ -96,10 +104,10 @@
               <select
                 v-model="form.type"
                 class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                       text-gray-900 shadow-sm
+                       focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                       dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100
+                       dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
               >
                 <option>Surprise</option>
                 <option>Programmée</option>
@@ -112,10 +120,10 @@
                 v-model="form.date"
                 type="date"
                 class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                       text-gray-900 shadow-sm
+                       focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                       dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100
+                       dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
                 required
               />
             </label>
@@ -124,11 +132,12 @@
               Cours
               <input
                 v-model="form.cours"
+                list="cours-list"
                 class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                       text-gray-900 shadow-sm placeholder-gray-500
+                       focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                       dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
+                       dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
                 required
               />
             </label>
@@ -137,11 +146,12 @@
               Classe
               <input
                 v-model="form.classe"
+                list="classe-list"
                 class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                       text-gray-900 shadow-sm placeholder-gray-500
+                       focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                       dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
+                       dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
                 required
               />
             </label>
@@ -153,10 +163,10 @@
                 type="number"
                 min="1"
                 class="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
-                      text-gray-900 shadow-sm placeholder-gray-500
-                      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
-                      dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                      dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                       text-gray-900 shadow-sm placeholder-gray-500
+                       focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                       dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
+                       dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
               />
             </label>
           </div>
@@ -167,12 +177,15 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, computed } from 'vue'
+import { useSchoolStore } from '@/stores/school'
 import PageHeader from '@/components/PageHeader.vue'
 import FilterBar from '@/components/FilterBar.vue'
 import DataTable from '@/components/DataTable.vue'
 import CrudModal from '@/components/CrudModal.vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
+
+const school = useSchoolStore()
 
 const headers = [
   { key: 'titre',  label: 'Titre' },
@@ -185,46 +198,8 @@ const headers = [
 
 // Filtres
 const filters = ref({ q: '', cours: '', classe: '', date: '' })
-
-// Données
-const allRows = ref([])
-const rows = ref([])
-
-// Modal + Form
-const modalOpen = ref(false)
-const form = ref({ id: null, titre: '', type: 'Programmée', date: '', cours: '', classe: '', bareme: 10 })
-
-/* -------- CRUD/mock + load -------- */
-function load () {
-  allRows.value = mockData()
-  applyFilters()
-}
-function openCreate () {
-  form.value = { id: null, titre: '', type: 'Programmée', date: '', cours: '', classe: '', bareme: 10 }
-  modalOpen.value = true
-}
-function openEdit (r) {
-  form.value = { ...r }
-  modalOpen.value = true
-}
-async function save () {
-  form.value.id ? await update() : await create()
-  modalOpen.value = false
-  load()
-}
-async function create () { /* POST /interros */ }
-async function update () { /* PUT  /interros/:id */ }
-async function removeRow (r) {
-  // DELETE /interros/:id
-  allRows.value = allRows.value.filter(x => x.id !== r.id)
-  applyFilters()
-}
-
-/* ------------- Filtres ------------- */
-function onResetFilters () {
-  filters.value = { q: '', cours: '', classe: '', date: '' }
-  applyFilters()
-}
+const coursOptions = computed(() => school.uniqueInterroCours)
+const classeOptions = computed(() => school.uniqueInterroClasses)
 
 // Normalisation : insensible aux accents/majuscules
 function normalize (s) {
@@ -234,41 +209,55 @@ function normalize (s) {
     .replace(/\p{Diacritic}/gu, '')
 }
 
-function applyFilters () {
+// Lignes affichées (filtrées) — basé sur le store
+const rows = computed(() => {
   const q = normalize(filters.value.q)
-  const fCours = normalize(filters.value.cours)
+  const fCours  = normalize(filters.value.cours)
   const fClasse = normalize(filters.value.classe)
-  const fDate = filters.value.date // YYYY-MM-DD
+  const fDate   = filters.value.date // YYYY-MM-DD exact
 
-  rows.value = allRows.value.filter(r => {
-    // Recherche plein-texte sur plusieurs champs
+  return school.interros.filter(r => {
     const haystack = normalize(`${r.titre} ${r.type} ${r.date} ${r.cours} ${r.classe} ${r.bareme}`)
     const matchesQ = q ? haystack.includes(q) : true
-
-    // Spécifiques
-    const matchesCours = fCours ? normalize(r.cours).includes(fCours) : true
+    const matchesCours  = fCours  ? normalize(r.cours).includes(fCours)   : true
     const matchesClasse = fClasse ? normalize(r.classe).includes(fClasse) : true
-    const matchesDate = fDate ? r.date === fDate : true
-
+    const matchesDate   = fDate   ? r.date === fDate : true
     return matchesQ && matchesCours && matchesClasse && matchesDate
   })
+})
+
+// Modal + Form
+const modalOpen = ref(false)
+const form = ref({ id: null, titre: '', type: 'Programmée', date: '', cours: '', classe: '', bareme: 10 })
+
+function onResetFilters () {
+  filters.value = { q: '', cours: '', classe: '', date: '' }
 }
 
-// Auto-filtre (debounce léger)
-let t
-watch(filters, () => {
-  clearTimeout(t)
-  t = setTimeout(applyFilters, 150)
-}, { deep: true })
-
-/* ------------- Données mock ------------- */
-function mockData () {
-  return [
-    { id: 1, titre: 'Interro dérivées',      type: 'Surprise',   date: '2025-10-03', cours: 'Math',     classe: '6ème A', bareme: 10 },
-    { id: 2, titre: 'Interro vocabulaire',   type: 'Programmée', date: '2025-10-06', cours: 'Français', classe: '6ème B', bareme: 10 },
-    { id: 3, titre: 'Interro énergie',       type: 'Programmée', date: '2025-10-10', cours: 'Physique', classe: '6ème A', bareme: 20 }
-  ]
+function openCreate () {
+  form.value = { id: null, titre: '', type: 'Programmée', date: '', cours: '', classe: '', bareme: 10 }
+  modalOpen.value = true
+}
+function openEdit (r) {
+  form.value = { ...r }
+  modalOpen.value = true
+}
+function save () {
+  form.value.id ? update() : create()
+  modalOpen.value = false
+}
+function create () {
+  school.addInterro({ ...form.value })
+}
+function update () {
+  school.updateInterro({ ...form.value })
+}
+function removeRow (r) {
+  school.removeInterro(r.id)
 }
 
-load()
+// pour compat avec le bouton "Filtrer"
+function applyFilters () {
+  /* rows est un computed, rien à faire ici */
+}
 </script>
