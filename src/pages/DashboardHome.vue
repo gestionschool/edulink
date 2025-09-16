@@ -1,23 +1,30 @@
 <!-- pages/DashboardHome.vue -->
 <template>
-  <div>
-    <PageHeader title="Tableau de bord" />
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-      <Kpi label="Étudiants" :value="1280"/>
-      <Kpi label="Professeurs" :value="86"/>
-      <Kpi label="Cours actifs" :value="142"/>
-      <Kpi label="Examens à venir" :value="12"/>
-    </div>
-    <div class="mt-6">
-      <h2 class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Prochains examens</h2>
-      <!-- mini-table -->
-      <DataTable :rows="rows" :headers="headers" idKey="id" @edit="() => {}" @remove="() => {}"/>
-    </div>
-  </div>
+    <AppLayout>
+        <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+            <div class="mx-auto max-w-6xl p-4 sm:p-6">    
+                <PageHeader title="Tableau de bord" />
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <Kpi label="Étudiants" :value="1280"/>
+                    <Kpi label="Professeurs" :value="86"/>
+                    <Kpi label="Cours actifs" :value="142"/>
+                    <Kpi label="Examens à venir" :value="12"/>
+                </div>
+                <div class="rounded-xl border border-gray-200 bg-white p-3 shadow-sm
+                    dark:border-gray-700 dark:bg-gray-900"
+                >
+                    <h2 class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Prochains examens</h2>
+                    <!-- mini-table -->
+                    <DataTable :rows="rows" :headers="headers" idKey="id" @edit="() => {}" @remove="() => {}"/>
+                </div>
+            </div>
+        </div>
+    </AppLayout>
 </template>
 <script setup>
 import PageHeader from '@/components/PageHeader.vue'
 import DataTable from '@/components/DataTable.vue'
+import AppLayout from '@/components/layout/AppLayout.vue'
 
 const headers=[{key:'intitule',label:'Examen'},{key:'classe',label:'Classe'},{key:'date',label:'Date'}]
 const rows=[{id:1,intitule:'Math S1',classe:'6ème A',date:'2025-10-02'}]

@@ -15,7 +15,7 @@ import AdminPeriodesList from '@/pages/AdminPeriodesList.vue'
 import AdminSemestresList from '@/pages/AdminSemestresList.vue'
 
 export const router =  createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: '/', component: LoginPage, meta:{ public:true }},
     { path: '/dashboard', component: DashboardHome },
