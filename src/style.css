@@ -1,0 +1,28 @@
+@import "tailwindcss";
+:root{
+  --grid-line-color: rgb(228 228 231); /* zinc-200 */
+  --surface: #ffffff;
+  --canvas: #f8fafc; /* slate-50 */
+  --text: #0a0a0a;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --grid-line-color: rgb(39 39 42); /* zinc-800 */
+    --surface: #0b0b10;
+    --canvas: #0b0b10;
+    --text: #fafafa;
+  }
+}
+
+body { min-width:320px; background: var(--canvas); color: var(--text); }
+
+
+
+/* Scrollbar */
+::-webkit-scrollbar{ width: 8px; height: 8px; }
+::-webkit-scrollbar-track{ background: rgba(244,244,245,.8); border-radius:8px; }
+::-webkit-scrollbar-thumb{ background: rgba(0,0,0,.18); border-radius:8px; }
+@media (prefers-color-scheme: dark){
+  ::-webkit-scrollbar-track{ background: rgba(24,24,27,.6); }
+  ::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.2); }
+}
