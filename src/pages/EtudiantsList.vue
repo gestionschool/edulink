@@ -64,7 +64,21 @@
             idKey="id"
             @edit="openEdit"
             @remove="removeRow"
-          />
+          >
+            <!-- Colonne Actions personnalisée -->
+            <template #actions-extra="{ row }">
+              <div class="flex gap-2">
+                <button
+                  class="mr-2 inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium
+                     text-blue-700 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500
+                     dark:text-blue-400 dark:focus:ring-blue-400"
+                  @click="openBulletin(row)"
+                >
+                  Bulletin
+                </button>
+              </div>
+            </template>
+          </DataTable>
         </div>
 
         <!-- Modal CRUD -->
@@ -109,7 +123,7 @@
                        text-gray-900 shadow-sm placeholder-gray-500
                        focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
                        dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400
-                       dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                       dark:focus;border-indigo-400 dark:focus:ring-indigo-400"
                 required
               />
             </label>
@@ -162,7 +176,7 @@
                        text-gray-900 shadow-sm
                        focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
                        dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100
-                       dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
+                       dark:focus;border-indigo-400 dark:focus:ring-indigo-400"
               >
                 <option>Actif</option>
                 <option>Suspendu</option>
@@ -178,6 +192,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
 import { useSchoolStore } from '@/stores/school'
 
 import PageHeader from '@/components/PageHeader.vue'
@@ -194,12 +209,13 @@ const headers = [
   { key: 'classe',    label: 'Classe' },
   { key: 'tuteur',    label: 'Tuteur' },
   { key: 'telephone', label: 'Téléphone' },
-  { key: 'statut',    label: 'Statut' }
+  { key: 'statut',    label: 'Statut' },
+  { key: '_actions',  label: 'Actions' } // colonne pour “Bulletin”
 ]
 
 /* ================= store ================= */
 const school = useSchoolStore()
-const { students, classes, uniqueStudentClasses } = storeToRefs(school)
+const { students, classes, uniqueStudentClasses, periodes } = storeToRefs(school)
 
 /* IDs <-> labels */
 const classeIdToLabel = computed(() =>
@@ -223,8 +239,7 @@ function normalize (s) {
     .replace(/\p{Diacritic}/gu, '')
 }
 
-/* ================= donnée vue (dénormalisée) =================
-   On expose aux tableaux un objet avec 'classe' (label) et valeurs par défaut. */
+/* ================= donnée vue (dénormalisée) ================= */
 const sourceRows = computed(() =>
   students.value.map(s => ({
     id: s.id,
@@ -256,7 +271,7 @@ const rows = computed(() => {
 function onResetFilters () {
   filters.value = { q: '', classe: '', statut: '' }
 }
-function noop(){ /* bouton "Filtrer" laissé pour l'UI – les filtres sont réactifs */ }
+function noop(){}
 
 /* ================= modal / form ================= */
 const modalOpen = ref(false)
@@ -265,7 +280,7 @@ const form = ref({
   matricule: '',
   nom: '',
   prenom: '',
-  classe: '',     // <- label (converti en classeId au save)
+  classe: '',     // label (converti en classeId au save)
   tuteur: '',
   telephone: '',
   statut: 'Actif'
@@ -276,14 +291,12 @@ function openCreate () {
   modalOpen.value = true
 }
 function openEdit (r) {
-  // r vient de la vue (avec label de classe)
   form.value = { ...r }
   modalOpen.value = true
 }
 
 async function save () {
   const payload = { ...form.value }
-  // map label -> ID
   const classeId = labelToClasseId.value[payload.classe] ?? null
 
   if (payload.id) {
@@ -297,5 +310,16 @@ async function save () {
 
 async function removeRow (r) {
   school.removeEtudiant(r.id)
+}
+
+/* ================= Lien vers Bulletin ================= */
+const router = useRouter()
+const currentPeriodeId = computed(() =>
+  periodes.value.find(p => p.active)?.id ?? periodes.value[0]?.id ?? null
+)
+
+function openBulletin (row) {
+  if (!row?.id || !currentPeriodeId.value) return
+  router.push({ name: 'bulletin', params: { eleveId: row.id, periodeId: currentPeriodeId.value } })
 }
 </script>

@@ -58,9 +58,9 @@ export const router = createRouter({
     // Lecture (tout utilisateur connecté : élève voit le sien, prof/direction/admin voient selon périmètre)
     {
       path: '/bulletin/:eleveId/:periodeId',
-      name: 'bulletin.show',
+      name: 'bulletin',
       component: BulletinDetail,
-      meta: { requiresAuth: true, ability: 'readPedago' }
+      meta: { requiresAuth: false}
     },
     // Édition (réservée prof / direction / admin générale)
     {

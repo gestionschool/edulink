@@ -38,6 +38,7 @@
 
           <!-- Actions -->
           <td class="px-3 py-2 text-right">
+            <!-- Défaut : Modifier / Supprimer -->
             <button
               type="button"
               @click="emit('edit', row)"
@@ -56,6 +57,9 @@
             >
               Supprimer
             </button>
+
+            <!-- Slot optionnel : actions additionnelles -->
+            <slot name="actions-extra" :row="row"></slot>
           </td>
         </tr>
 
