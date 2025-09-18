@@ -1,1 +1,0 @@
-import{c as s,o as a,a as r,x as o,t as n}from"./index-sHYk9eTQ.js";const c={class:"mb-6 flex items-center justify-between"},i={class:"text-xl font-semibold text-gray-900 dark:text-gray-100"},d={__name:"PageHeader",props:{title:{type:String,required:!0}},setup(e){return(t,l)=>(a(),s("div",c,[r("h1",i,n(e.title),1),o(t.$slots,"actions")]))}};export{d as _};
