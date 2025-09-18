@@ -11,5 +11,15 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
     },
   },
+  server: {
+    proxy: {
+      // toutes les requêtes /api/* sont proxy vers json-server
+      '/api': {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+        rewrite: p => p.replace(/^\/api/, '')
+      }
+    }
+  }
   
 })

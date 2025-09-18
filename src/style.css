@@ -1,16 +1,22 @@
 @import "tailwindcss";
 :root{
-  --grid-line-color: rgb(228 228 231); /* zinc-200 */
-  --surface: #ffffff;
-  --canvas: #f8fafc; /* slate-50 */
-  --text: #0a0a0a;
+  --bg:#0b1220;
+    --card:#0f172a;
+    --text:#e5e7eb;
+    --muted:#9aa4b2;
+    --border:rgba(255,255,255,0.12);
+    --table-head:#111a2e; /* head sombre en dark */
+    --primary:#8b5cf6; --on-primary:#0b1220; /* violet lisible en dark */
 }
 @media (prefers-color-scheme: dark){
   :root{
-    --grid-line-color: rgb(39 39 42); /* zinc-800 */
-    --surface: #0b0b10;
-    --canvas: #0b0b10;
-    --text: #fafafa;
+    --bg:#0b1220;
+    --card:#0f172a;
+    --text:#e5e7eb;
+    --muted:#9aa4b2;
+    --border:rgba(255,255,255,0.12);
+    --table-head:#111a2e; /* head sombre en dark */
+    --primary:#8b5cf6; --on-primary:#0b1220; /* violet lisible en dark */
   }
 }
 
@@ -26,3 +32,6 @@ body { min-width:320px; background: var(--canvas); color: var(--text); }
   ::-webkit-scrollbar-track{ background: rgba(24,24,27,.6); }
   ::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.2); }
 }
+
+/* Optionnel: adoucir les borders globalement */
+* { border-color: var(--border); }

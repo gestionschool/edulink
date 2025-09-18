@@ -1,25 +1,32 @@
-// src/composables/useAcl.js
-import { computed } from 'vue'
-import { useAuthStore, ROLES } from '@/stores/useAuth'
-
-export function useAcl() {
-  const auth = useAuthStore()
-  const role = computed(() => auth.user?.role)
-
-  const isAdminGen   = computed(() => role.value === ROLES.ADMIN_GENERALE)
-  const isAdminEcole = computed (() => role.value === ROLES.ADMIN_ECOLE)
-  const isProf       = computed (() => role.value === ROLES.PROFESSEUR)
-  const isEleve      = computed (() => role.value === ROLES.ELEVE)
-
-  // Capabilities (UI)
-  const canManageUsers      = computed(() => isAdminGen.value)
-  const canManageSchools    = computed(() => isAdminGen.value)                 // création d’écoles
-  const canManageStructure  = computed(() => isAdminGen.value || isAdminEcole.value) // périodes/semestres/classes/cours
-  const canEditPedago       = computed(() => isProf.value || isAdminEcole.value || isAdminGen.value)
-  const canReadPedago       = computed(() => !!role.value) // tout utilisateur connecté
-
-  return {
-    role, isAdminGen, isAdminEcole, isProf, isEleve,
-    canManageUsers, canManageSchools, canManageStructure, canEditPedago, canReadPedago
+// composables/useAcl.js
+import { ROLES } from '@/types/roles'
+export function can(user, perm) {
+  if (!user) return false
+  const role = user.role
+  const MAP = {
+    // Supervise tout
+    [ROLES.SUPER_ADMIN]: [
+      'schools:*', 'users:*', 'reports:global', 'periods:*', 'semesters:*'
+    ],
+    // Gère sa propre école
+    [ROLES.SCHOOL_ADMIN]: [
+      'classes:*', 'students:*', 'teachers:*', 'courses:*',
+      'timetable:*', 'evaluations:*', 'periods:*', 'semesters:*',
+      'presence:*', 'reports:school'
+    ],
+    // Prof
+    [ROLES.TEACHER]: [
+      'my:classes:read', 'presence:mark', 'evaluations:create',
+      'notes:edit', 'bulletins:read'
+    ],
   }
+  const allowed = MAP[role] || []
+  if (allowed.includes('*')) return true
+  const [res, act='read'] = perm.split(':')
+  return allowed.some(p => {
+    if (p === `${res}:${act}`) return true
+    if (p === `${res}:*`) return true
+    if (p.endsWith(':*') && p.split(':')[0] === res) return true
+    return false
+  })
 }

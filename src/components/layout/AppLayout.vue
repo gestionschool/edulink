@@ -1,66 +1,46 @@
-<!-- components/layout/AppLayout.vue -->
+<!-- src/components/layout/AppLayout.vue -->
 <template>
-  <div class="h-screen bg-slate-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100">
-    <div class="flex h-full">
+  <div class="min-h-screen w-full bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+    <div class="flex">
       <!-- Sidebar desktop -->
-      <aside class="hidden md:block w-64 lg:w-72 shrink-0 border-r border-gray-200 dark:border-neutral-800">
-        <Sidebar @navigate="closeIfMobile" />
+      <aside class="hidden md:block w-72 h-screen overflow-y-auto border-r border-slate-200 dark:border-slate-800">
+        <Sidebar @navigate="open=false" />
       </aside>
 
       <!-- Drawer mobile -->
       <transition name="fade">
-        <div
-          v-if="sidebarOpen"
-          class="fixed inset-0 z-40 bg-black/50 md:hidden"
-          @click.self="sidebarOpen = false"
-        >
-          <aside
-            class="absolute inset-y-0 left-0 w-72 bg-white dark:bg-neutral-900 border-r border-gray-200 dark:border-neutral-800 shadow-xl"
-          >
-            <Sidebar @navigate="sidebarOpen = false" />
-          </aside>
+        <div v-if="open" class="fixed inset-0 z-40 md:hidden flex">
+          <div class="w-72 h-screen overflow-y-auto bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800">
+            <Sidebar @navigate="open=false" />
+          </div>
+          <div class="flex-1 bg-black/40" @click="open=false" />
         </div>
       </transition>
 
-      <!-- Colonne principale -->
-      <div class="flex-1 min-w-0 flex flex-col min-h-0">
-        <Navbar
-          @toggle-sidebar="sidebarOpen = true"
-        />
-
-        <!-- Contenu scrollable -->
-        <main class="flex-1 min-h-0 overflow-auto">
-          <!-- Si tu utilises le layout comme wrapper globale, laisse <slot/> -->
-          <slot />
-          <!-- Ou si tu veux le layout piloter le router directement:
-          <router-view />
-          -->
+      <!-- Content -->
+      <div class="flex-1 min-h-screen flex flex-col">
+        <Navbar @toggle-sidebar="open = !open" />
+        <main class="flex-1 p-4 md:p-6">
+          <RouterView />
         </main>
-
-        <!-- Footer en bas -->
-        <AppFooter appName="Edulink" version="1.0" />
+        <AppFooter class="mt-auto" appName="Edulink" version="1.0" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import Navbar from './Navbar.vue'
+import { ref, onMounted } from 'vue'
+import { useSchoolStore } from '@/stores/school'
 import Sidebar from './Sidebar.vue'
+import Navbar from './Navbar.vue'
 import AppFooter from './AppFooter.vue'
-
-const sidebarOpen = ref(false)
-const isDark = ref(false)
-
-
-
-function closeIfMobile() {
-  sidebarOpen.value = false
-}
+const open = ref(false)
+const school = useSchoolStore()
+onMounted(() => { school.init().catch(console.error) })
 </script>
 
 <style scoped>
-.fade-enter-active, .fade-leave-active { transition: opacity .15s ease; }
-.fade-enter-from, .fade-leave-to { opacity: 0; }
+.fade-enter-active,.fade-leave-active{ transition: opacity .15s ease }
+.fade-enter-from,.fade-leave-to{ opacity:0 }
 </style>
