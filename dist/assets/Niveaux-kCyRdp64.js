@@ -1,0 +1,1 @@
+import{_ as e}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{a as o,o as r}from"./index-C5nwF8dZ.js";const c={};function t(a,n){return r(),o("div",null,"Niveaux")}const f=e(c,[["render",t]]);export{f as default};

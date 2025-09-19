@@ -96,8 +96,9 @@ export const useAuthStore = defineStore('auth', {
         }
 
         // 2) Fallback GitHub Pages (JSON statique)
-        const res = await fetch('/data/users.json', { cache: 'no-store' })
-        if (!res.ok) throw new Error('Impossible de lire /data/users.json')
+        const url = new URL('data/users.json', '/edulink/').toString()
+        const res = await fetch(url, { cache: 'no-store' })
+        if (!res.ok) throw new Error(`Static JSON introuvable: ${url}`)
         const users = await res.json()
         const user = users.find((u) => u.email === email && u.password === password)
         if (!user) throw new Error('Identifiants invalides (fallback)')
