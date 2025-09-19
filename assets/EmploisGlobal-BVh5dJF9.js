@@ -1,1 +1,0 @@
-import{_ as o}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{a as e,o as r}from"./index-C5nwF8dZ.js";const c={};function l(t,a){return r(),e("div",null,"EmploisGlobal")}const _=o(c,[["render",l]]);export{_ as default};
