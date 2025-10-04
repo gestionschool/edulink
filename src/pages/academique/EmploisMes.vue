@@ -151,19 +151,19 @@ import WeekGrid from '@/components/timetable/WeekGrid.vue'
 import Modal from '@/components/ui/Modal.vue'
 
 import { useAuthStore } from '@/stores/useAuth'
-import { useSeancesStore } from '@/stores/useSeances'
-import { useClassesStore } from '@/stores/useClasses'
-import { useCoursStore } from '@/stores/useCours'
-import { useTeachersStore } from '@/stores/useTeachers'
-import { usePeriodesStore } from '@/stores/usePeriodes'
+import { useSeances } from '@/stores/useSeances'
+import { useClasses } from '@/stores/useClasses'
+import { useCours } from '@/stores/useCours'
+import { useTeachers } from '@/stores/useTeachers'
+import { usePeriodes } from '@/stores/usePeriodes'
 import { ROLES } from '@/types/roles'
 
 const auth      = useAuthStore()
-const seances   = useSeancesStore()
-const classesS  = useClassesStore()
-const coursS    = useCoursStore()
-const teachersS = useTeachersStore()
-const periodesS = usePeriodesStore()
+const seances   = useSeances()
+const classesS  = useClasses()
+const coursS    = useCours()
+const teachersS = useTeachers()
+const periodesS = usePeriodes()
 
 const days = ['Lun','Mar','Mer','Jeu','Ven','Sam']
 

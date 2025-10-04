@@ -103,15 +103,15 @@
 
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { usePresencesStore } from '@/stores/usePresences'
-import { useClassesStore } from '@/stores/useClasses'
-import { useStudentsStore } from '@/stores/useStudents'
-import { useCoursStore } from '@/stores/useCours'
+import { usePresences } from '@/stores/usePresences'
+import { useClasses } from '@/stores/useClasses'
+import { useStudents } from '@/stores/useStudents'
+import { useCours } from '@/stores/useCours'
 
-const pres = usePresencesStore()
-const classesStore = useClassesStore()
-const studentsStore= useStudentsStore()
-const coursStore   = useCoursStore()
+const pres = usePresences()
+const classesStore = useClasses()
+const studentsStore= useStudents()
+const coursStore   = useCours()
 
 const today = new Date().toISOString().slice(0,10)
 const dateFrom = ref(today)

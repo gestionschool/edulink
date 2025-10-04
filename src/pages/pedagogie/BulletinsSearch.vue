@@ -120,13 +120,13 @@ import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
 // Stores
-import { useStudentsStore } from '@/stores/useStudents'
-import { useClassesStore } from '@/stores/useClasses'
-import { usePeriodesStore } from '@/stores/usePeriodes'
+import { useStudents } from '@/stores/useStudents'
+import { useClasses } from '@/stores/useClasses'
+import { usePeriodes } from '@/stores/usePeriodes'
 
-const students = useStudentsStore()
-const classes  = useClassesStore()
-const periodes = usePeriodesStore()
+const students = useStudents()
+const classes  = useClasses()
+const periodes = usePeriodes()
 
 const periodeId = ref('')
 const classeId  = ref('')

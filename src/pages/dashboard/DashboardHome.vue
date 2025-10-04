@@ -189,14 +189,14 @@ async function loadDashboard() {
 async function loadStoresIfAny() {
   const res = {}
   await Promise.allSettled([
-    importIfExists('@/stores/useEcoles').then(m => res.ecoles   = m?.useEcolesStore?.()),
-    importIfExists('@/stores/useClasses').then(m => res.classes = m?.useClassesStore?.()),
-    importIfExists('@/stores/useStudents').then(m => res.students= m?.useStudentsStore?.()),
-    importIfExists('@/stores/useTeachers').then(m => res.teachers= m?.useTeachersStore?.()),
-    importIfExists('@/stores/useCours').then(m => res.cours     = m?.useCoursStore?.()),
-    importIfExists('@/stores/useDevoirs').then(m => res.devoirs = m?.useDevoirsStore?.()),
-    importIfExists('@/stores/useInterros').then(m => res.interros= m?.useInterrosStore?.()),
-    importIfExists('@/stores/useExamens').then(m => res.examens = m?.useExamensStore?.()),
+    importIfExists('@/stores/useEcoles').then(m => res.ecoles   = m?.useEcoles?.()),
+    importIfExists('@/stores/useClasses').then(m => res.classes = m?.useClasses?.()),
+    importIfExists('@/stores/useStudents').then(m => res.students= m?.useStudents?.()),
+    importIfExists('@/stores/useTeachers').then(m => res.teachers= m?.useTeachers?.()),
+    importIfExists('@/stores/useCours').then(m => res.cours     = m?.useCours?.()),
+    importIfExists('@/stores/useDevoirs').then(m => res.devoirs = m?.useDevoirs?.()),
+    importIfExists('@/stores/useInterros').then(m => res.interros= m?.useInterros?.()),
+    importIfExists('@/stores/useExamens').then(m => res.examens = m?.useExamens?.()),
   ])
   // Chaque store peut exposer ensureLoaded/fetch/list — on tente prudemment
   await Promise.allSettled([

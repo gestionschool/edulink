@@ -117,16 +117,16 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import { useAuthStore } from '@/stores/useAuth'
-import { useClassesStore } from '@/stores/useClasses'
-import { useCoursStore } from '@/stores/useCours'
-import { useStudentsStore } from '@/stores/useStudents'
-import { usePresencesStore } from '@/stores/usePresences'
+import { useClasses } from '@/stores/useClasses'
+import { useCours } from '@/stores/useCours'
+import { useStudents } from '@/stores/useStudents'
+import { usePresences } from '@/stores/usePresences'
 
 const auth = useAuthStore()
-const classesStore = useClassesStore()
-const coursStore   = useCoursStore()
-const studentsStore= useStudentsStore()
-const pres         = usePresencesStore()
+const classesStore = useClasses()
+const coursStore   = useCours()
+const studentsStore= useStudents()
+const pres         = usePresences()
 
 // Filtres
 const today = new Date().toISOString().slice(0,10)

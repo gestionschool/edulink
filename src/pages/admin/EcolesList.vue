@@ -94,9 +94,9 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import PageShell from '@/components/ui/PageShell.vue'
-import { useEcolesStore } from '@/stores/useEcolesStore.js'
+import { useEcoles } from '@/stores/useEcoles.js'
 
-const store = useEcolesStore()
+const store = useEcoles()
 const router = useRouter()
 
 const q = ref('')

@@ -77,7 +77,7 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useClassesStore } from '@/stores/useClasses'
+import { useClasses } from '@/stores/useClasses'
 
 import PageHeader from '@/components/layout/PageHeader.vue'
 import Toolbar    from '@/components/ui/Toolbar.vue'
@@ -85,7 +85,7 @@ import StateBlock from '@/components/ui/StateBlock.vue'
 import ClassCard  from '@/components/classes/ClassCard.vue'
 import ClassTable from '@/components/classes/ClassTable.vue'
 
-const store = useClassesStore()
+const store = useClasses()
 
 // Filtres
 const q = ref('')

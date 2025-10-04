@@ -62,20 +62,20 @@
 
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { useClassesStore } from '@/stores/useClasses'
-import { usePeriodesStore } from '@/stores/usePeriodes'
-import { useStudentsStore } from '@/stores/useStudents'
-import { useEvaluationsStore } from '@/stores/useEvaluations'
-import { useBulletinsMetaStore } from '@/stores/useBulletinsMeta'
+import { useClasses } from '@/stores/useClasses'
+import { usePeriodes } from '@/stores/usePeriodes'
+import { useStudents } from '@/stores/useStudents'
+import { useEvaluations } from '@/stores/useEvaluations'
+import { useBulletinsMeta } from '@/stores/useBulletinsMeta'
 
 import BulletinFilters from '@/components/pedagogie/BulletinFilters.vue'
 import BulletinsTable  from '@/components/pedagogie/BulletinsTable.vue'
 
-const classes   = useClassesStore()
-const periodes  = usePeriodesStore()
-const students  = useStudentsStore()
-const evals     = useEvaluationsStore()
-const metas     = useBulletinsMetaStore()
+const classes   = useClasses()
+const periodes  = usePeriodes()
+const students  = useStudents()
+const evals     = useEvaluations()
+const metas     = useBulletinsMeta()
 
 const fClasse  = ref('')
 const fPeriode = ref('')

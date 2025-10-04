@@ -65,21 +65,21 @@
 <script setup>
 import { computed, onMounted, ref, watch, reactive } from 'vue'
 import { useAuthStore }    from '@/stores/useAuth'
-import { useClassesStore } from '@/stores/useClasses'
-import { useCoursStore }   from '@/stores/useCours'
-import { usePeriodesStore }from '@/stores/usePeriodes'
-import { useStudentsStore }from '@/stores/useStudents'
-import { useEvaluationsStore } from '@/stores/useEvaluations'
+import { useClasses } from '@/stores/useClasses'
+import { useCours }   from '@/stores/useCours'
+import { usePeriodes }from '@/stores/usePeriodes'
+import { useStudents }from '@/stores/useStudents'
+import { useEvaluations } from '@/stores/useEvaluations'
 
 import NotesFilters     from '@/components/pedagogie/NotesFilters.vue'
 import NotesEntryTable  from '@/components/pedagogie/NotesEntryTable.vue'
 
 const auth     = useAuthStore()
-const classes  = useClassesStore()
-const cours    = useCoursStore()
-const periodes = usePeriodesStore()
-const students = useStudentsStore()
-const evals    = useEvaluationsStore()
+const classes  = useClasses()
+const cours    = useCours()
+const periodes = usePeriodes()
+const students = useStudents()
+const evals    = useEvaluations()
 
 // sélections
 const fClasse  = ref('')

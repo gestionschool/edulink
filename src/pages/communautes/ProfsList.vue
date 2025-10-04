@@ -202,9 +202,9 @@
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import Modal from '@/components/ui/Modal.vue'
-import { useTeachersStore } from '@/stores/useTeachers'
+import { useTeachers } from '@/stores/useTeachers'
 
-const teachers = useTeachersStore()
+const teachers = useTeachers()
 
 const q = ref('')
 const matiere = ref('')

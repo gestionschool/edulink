@@ -162,26 +162,26 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 
-import { useStudentsStore } from '@/stores/useStudents'
-import { useClassesStore }   from '@/stores/useClasses'
-import { useCoursStore }     from '@/stores/useCours'
-import { usePeriodesStore }  from '@/stores/usePeriodes'
-import { useEvaluationsStore } from '@/stores/useEvaluations'
-import { useTeachersStore }  from '@/stores/useTeachers'
+import { useStudents } from '@/stores/useStudents'
+import { useClasses }   from '@/stores/useClasses'
+import { useCours }     from '@/stores/useCours'
+import { usePeriodes }  from '@/stores/usePeriodes'
+import { useEvaluations } from '@/stores/useEvaluations'
+import { useTeachers }  from '@/stores/useTeachers'
 // (optionnel) si tu as un store des bulletins (resource: bulletinsMeta)
-import { useBulletinsMetaStore } from '@/stores/useBulletinsMeta' // <- adapte le nom si besoin
+import { useBulletinsMeta } from '@/stores/useBulletinsMeta' // <- adapte le nom si besoin
 
 const route = useRoute()
 const id = ref(Number(route.query.id || 0))
 watch(() => route.query.id, v => { id.value = Number(v || 0) })
 
-const studentsS = useStudentsStore()
-const classesS  = useClassesStore()
-const coursS    = useCoursStore()
-const periodesS = usePeriodesStore()
-const evalsS    = useEvaluationsStore()
-const teachersS = useTeachersStore()
-const bulletS   = useBulletinsMetaStore?.() // évite un crash si non défini
+const studentsS = useStudents()
+const classesS  = useClasses()
+const coursS    = useCours()
+const periodesS = usePeriodes()
+const evalsS    = useEvaluations()
+const teachersS = useTeachers()
+const bulletS   = useBulletinsMeta?.() // évite un crash si non défini
 
 const loading = ref(true)
 onMounted(async () => {

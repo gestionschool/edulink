@@ -133,17 +133,17 @@ import { computed, onMounted, ref, watch } from 'vue'
 import Modal from '@/components/ui/Modal.vue'
 import WeekGrid from '@/components/timetable/WeekGrid.vue'
 
-import { useSeancesStore } from '@/stores/useSeances'
-import { useClassesStore } from '@/stores/useClasses'
-import { useTeachersStore } from '@/stores/useTeachers'
-import { useCoursStore } from '@/stores/useCours'
-import { usePeriodesStore } from '@/stores/usePeriodes' // si tu l’as déjà, sinon supprime ce filtre
+import { useSeances } from '@/stores/useSeances'
+import { useClasses } from '@/stores/useClasses'
+import { useTeachers } from '@/stores/useTeachers'
+import { useCours } from '@/stores/useCours'
+import { usePeriodes } from '@/stores/usePeriodes' // si tu l’as déjà, sinon supprime ce filtre
 
-const seances  = useSeancesStore()
-const classesS = useClassesStore()
-const teachersS= useTeachersStore()
-const coursS   = useCoursStore()
-const periodesS= usePeriodesStore?.()
+const seances  = useSeances()
+const classesS = useClasses()
+const teachersS= useTeachers()
+const coursS   = useCours()
+const periodesS= usePeriodes?.()
 
 const classeId  = ref('')
 const teacherId = ref('')

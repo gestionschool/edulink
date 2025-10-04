@@ -1,7 +1,7 @@
 // src/stores/useAuth.js
 import { defineStore } from 'pinia'
 import { AuthService } from '@/services/auth'
-import { useUsersStore } from '@/stores/useUsers' // optionnel
+import { useUsers } from '@/stores/useUsers' // optionnel
 
 const LS_KEY = 'auth_state_v1' // { user, token }
 
@@ -59,7 +59,7 @@ export const useAuthStore = defineStore('auth', {
         this.persist()
 
         // Optionnel : hydrate/MAJ le cache des users
-        const users = useUsersStore?.()
+        const users = useUsers?.()
         if (users?.upsert) users.upsert(user)
 
         return user

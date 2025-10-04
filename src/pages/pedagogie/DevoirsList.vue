@@ -56,20 +56,20 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useDevoirsStore } from '@/stores/useDevoirs'
-import { useCoursStore } from '@/stores/useCours'
-import { useClassesStore } from '@/stores/useClasses'
-import { usePeriodesStore } from '@/stores/usePeriodes'
-import { useTeachersStore } from '@/stores/useTeachers'
+import { useDevoirs } from '@/stores/useDevoirs'
+import { useCours } from '@/stores/useCours'
+import { useClasses } from '@/stores/useClasses'
+import { usePeriodes } from '@/stores/usePeriodes'
+import { useTeachers } from '@/stores/useTeachers'
 
 import DevoirsFilters from '@/components/pedagogie/DevoirsFilters.vue'
 import DevoirsTable   from '@/components/pedagogie/DevoirsTable.vue'
 
-const devoirs  = useDevoirsStore()
-const cours    = useCoursStore()
-const classes  = useClassesStore()
-const periodes = usePeriodesStore()
-const teachers = useTeachersStore()
+const devoirs  = useDevoirs()
+const cours    = useCours()
+const classes  = useClasses()
+const periodes = usePeriodes()
+const teachers = useTeachers()
 
 onMounted(async () => {
   await Promise.all([

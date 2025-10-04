@@ -128,17 +128,17 @@
 
 <script setup>
 import { onMounted, ref, computed } from 'vue'
-import { usePresencesStore } from '@/stores/usePresences'
-import { useClassesStore }   from '@/stores/useClasses'
-import { useStudentsStore }  from '@/stores/useStudents'
-import { useCoursStore }     from '@/stores/useCours'
-import { usePeriodesStore }  from '@/stores/usePeriodes'
+import { usePresences } from '@/stores/usePresences'
+import { useClasses }   from '@/stores/useClasses'
+import { useStudents }  from '@/stores/useStudents'
+import { useCours }     from '@/stores/useCours'
+import { usePeriodes }  from '@/stores/usePeriodes'
 
-const presS   = usePresencesStore()
-const classesS= useClassesStore()
-const studsS  = useStudentsStore()
-const coursS  = useCoursStore()
-const perS    = usePeriodesStore()
+const presS   = usePresences()
+const classesS= useClasses()
+const studsS  = useStudents()
+const coursS  = useCours()
+const perS    = usePeriodes()
 
 // Filtres
 const groupMode = ref('classe') // 'classe' | 'eleve' | 'jour'

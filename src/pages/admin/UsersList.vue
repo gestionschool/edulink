@@ -186,14 +186,14 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import Modal from '@/components/ui/Modal.vue'
-import { useUsersStore } from '@/stores/useUsers'
-import { useTeachersStore } from '@/stores/useTeachers'
-import { useEcolesStore } from '@/stores/useEcoles'
+import { useUsers } from '@/stores/useUsers'
+import { useTeachers } from '@/stores/useTeachers'
+import { useEcoles } from '@/stores/useEcoles'
 import { ROLES } from '@/types/roles'
 
-const store     = useUsersStore()
-const teachersS = useTeachersStore()
-const ecolesS   = useEcolesStore()
+const store     = useUsers()
+const teachersS = useTeachers()
+const ecolesS   = useEcoles()
 
 // Filtres
 const q       = ref('')

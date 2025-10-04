@@ -56,20 +56,20 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useInterrosStore } from '@/stores/useInterros'
-import { useCoursStore } from '@/stores/useCours'
-import { useClassesStore } from '@/stores/useClasses'
-import { usePeriodesStore } from '@/stores/usePeriodes'
-import { useTeachersStore } from '@/stores/useTeachers'
+import { useInterros } from '@/stores/useInterros'
+import { useCours } from '@/stores/useCours'
+import { useClasses } from '@/stores/useClasses'
+import { usePeriodes } from '@/stores/usePeriodes'
+import { useTeachers } from '@/stores/useTeachers'
 
 import InterrosFilters from '@/components/pedagogie/InterrosFilters.vue'
 import InterrosTable   from '@/components/pedagogie/InterrosTable.vue'
 
-const interros  = useInterrosStore()
-const cours     = useCoursStore()
-const classes   = useClassesStore()
-const periodes  = usePeriodesStore()
-const teachers  = useTeachersStore()
+const interros  = useInterros()
+const cours     = useCours()
+const classes   = useClasses()
+const periodes  = usePeriodes()
+const teachers  = useTeachers()
 
 onMounted(async () => {
   await Promise.all([

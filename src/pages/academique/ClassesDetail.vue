@@ -204,18 +204,18 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 
-import { useClassesStore }  from '@/stores/useClasses'
-import { useStudentsStore } from '@/stores/useStudents'
-import { useCoursStore }    from '@/stores/useCours'
-import { useTeachersStore } from '@/stores/useTeachers'
-import { usePeriodesStore } from '@/stores/usePeriodes'
+import { useClasses }  from '@/stores/useClasses'
+import { useStudents } from '@/stores/useStudents'
+import { useCours }    from '@/stores/useCours'
+import { useTeachers } from '@/stores/useTeachers'
+import { usePeriodes } from '@/stores/usePeriodes'
 
 const route = useRoute()
-const classesS  = useClassesStore()
-const studentsS = useStudentsStore()
-const coursS    = useCoursStore()
-const teachersS = useTeachersStore()
-const periodesS = usePeriodesStore()
+const classesS  = useClasses()
+const studentsS = useStudents()
+const coursS    = useCours()
+const teachersS = useTeachers()
+const periodesS = usePeriodes()
 
 const id = ref(Number(route.query.id || 0))
 

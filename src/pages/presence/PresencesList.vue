@@ -119,15 +119,15 @@
 
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { usePresencesStore } from '@/stores/usePresences'
-import { useClassesStore } from '@/stores/useClasses'
-import { useCoursStore } from '@/stores/useCours'
-import { useStudentsStore } from '@/stores/useStudents'
+import { usePresences } from '@/stores/usePresences'
+import { useClasses } from '@/stores/useClasses'
+import { useCours } from '@/stores/useCours'
+import { useStudents } from '@/stores/useStudents'
 
-const pres = usePresencesStore()
-const classesStore = useClassesStore()
-const coursStore   = useCoursStore()
-const studentsStore= useStudentsStore()
+const pres = usePresences()
+const classesStore = useClasses()
+const coursStore   = useCours()
+const studentsStore= useStudents()
 
 // filtres
 const today = new Date().toISOString().slice(0,10)

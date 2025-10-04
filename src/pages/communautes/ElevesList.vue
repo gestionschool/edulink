@@ -190,11 +190,11 @@
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import Modal from '@/components/ui/Modal.vue'
-import { useStudentsStore } from '@/stores/useStudents'
-import { useClassesStore } from '@/stores/useClasses'
+import { useStudents } from '@/stores/useStudents'
+import { useClasses } from '@/stores/useClasses'
 
-const students = useStudentsStore()
-const classesStore = useClassesStore()
+const students = useStudents()
+const classesStore = useClasses()
 
 const q = ref('')
 const classeId = ref('')

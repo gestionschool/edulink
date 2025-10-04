@@ -143,20 +143,20 @@ import { computed, onMounted, ref, watch, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // Stores
-import { useStudentsStore }   from '@/stores/useStudents'
-import { useClassesStore }    from '@/stores/useClasses'
-import { usePeriodesStore }   from '@/stores/usePeriodes'
-import { useEvaluationsStore }from '@/stores/useEvaluations'
-import { useBulletinsMetaStore } from '@/stores/useBulletinsMeta'
+import { useStudents }   from '@/stores/useStudents'
+import { useClasses }    from '@/stores/useClasses'
+import { usePeriodes }   from '@/stores/usePeriodes'
+import { useEvaluations }from '@/stores/useEvaluations'
+import { useBulletinsMeta } from '@/stores/useBulletinsMeta'
 
 const route = useRoute()
 const router = useRouter()
 
-const students = useStudentsStore()
-const classes  = useClassesStore()
-const periodes = usePeriodesStore()
-const evals    = useEvaluationsStore()
-const metas    = useBulletinsMetaStore()
+const students = useStudents()
+const classes  = useClasses()
+const periodes = usePeriodes()
+const evals    = useEvaluations()
+const metas    = useBulletinsMeta()
 
 const eleveId  = ref(route.query.eleveId ? Number(route.query.eleveId) : null)
 const periodeId= ref(route.query.periodeId ? Number(route.query.periodeId) : null)

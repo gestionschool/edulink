@@ -59,20 +59,20 @@
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
-import { useExamensStore } from '@/stores/useExamens'
-import { useCoursStore }    from '@/stores/useCours'
-import { useClassesStore }  from '@/stores/useClasses'
-import { usePeriodesStore } from '@/stores/usePeriodes'
-import { useTeachersStore } from '@/stores/useTeachers'
+import { useExamens } from '@/stores/useExamens'
+import { useCours }    from '@/stores/useCours'
+import { useClasses }  from '@/stores/useClasses'
+import { usePeriodes } from '@/stores/usePeriodes'
+import { useTeachers } from '@/stores/useTeachers'
 
 import ExamensFilters from '@/components/pedagogie/ExamensFilters.vue'
 import ExamensTable   from '@/components/pedagogie/ExamensTable.vue'
 
-const examens  = useExamensStore()
-const cours    = useCoursStore()
-const classes  = useClassesStore()
-const periodes = usePeriodesStore()
-const teachers = useTeachersStore()
+const examens  = useExamens()
+const cours    = useCours()
+const classes  = useClasses()
+const periodes = usePeriodes()
+const teachers = useTeachers()
 
 onMounted(async () => {
   await Promise.all([

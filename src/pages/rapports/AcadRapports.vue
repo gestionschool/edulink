@@ -147,18 +147,18 @@
 import { computed, onMounted, ref } from 'vue'
 
 // Stores (déjà créés avec makeCrudStore)
-import { useEvaluationsStore } from '@/stores/useEvaluations'
-import { useClassesStore }     from '@/stores/useClasses'
-import { useCoursStore }       from '@/stores/useCours'
-import { usePeriodesStore }    from '@/stores/usePeriodes'
-import { useStudentsStore }    from '@/stores/useStudents'
+import { useEvaluations } from '@/stores/useEvaluations'
+import { useClasses }     from '@/stores/useClasses'
+import { useCours }       from '@/stores/useCours'
+import { usePeriodes }    from '@/stores/usePeriodes'
+import { useStudents }    from '@/stores/useStudents'
 
 // Instances
-const evalS    = useEvaluationsStore()
-const classesS = useClassesStore()
-const coursS   = useCoursStore()
-const periodesS= usePeriodesStore()
-const studsS   = useStudentsStore()
+const evalS    = useEvaluations()
+const classesS = useClasses()
+const coursS   = useCours()
+const periodesS= usePeriodes()
+const studsS   = useStudents()
 
 // Filtres
 const viewMode  = ref('classe') // 'classe' | 'matiere'

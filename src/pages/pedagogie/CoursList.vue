@@ -54,17 +54,17 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useCoursStore } from '@/stores/useCours'
-import { useClassesStore } from '@/stores/useClasses'
-import { useTeachersStore } from '@/stores/useTeachers'
-import { usePeriodesStore } from '@/stores/usePeriodes'
+import { useCours } from '@/stores/useCours'
+import { useClasses } from '@/stores/useClasses'
+import { useTeachers } from '@/stores/useTeachers'
+import { usePeriodes } from '@/stores/usePeriodes'
 import CoursFilters from '@/components/pedagogie/CoursFilters.vue'
 import CoursTable from '@/components/pedagogie/CoursTable.vue'
 
-const cours = useCoursStore()
-const classes = useClassesStore()
-const teachers = useTeachersStore()
-const periodes = usePeriodesStore()
+const cours = useCours()
+const classes = useClasses()
+const teachers = useTeachers()
+const periodes = usePeriodes()
 
 // Chargement initial (toutes listes nécessaires pour les jointures + options)
 onMounted(async () => {
