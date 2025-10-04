@@ -1,129 +1,219 @@
+<!-- src/pages/pedagogie/NotesSaisie.vue -->
 <template>
-  <section class="space-y-4">
-    <header>
-      <h1 class="text-xl font-semibold">Saisie des notes</h1>
-      <p class="text-sm text-slate-500 dark:text-slate-400">Créer / mettre à jour une évaluation d’un élève</p>
-    </header>
-
-    <div class="grid gap-3 md:grid-cols-2">
-      <div class="rounded-xl border p-4 space-y-3 bg-white dark:bg-slate-900 dark:border-slate-800">
-        <div class="grid gap-2 sm:grid-cols-2">
-          <label class="block">
-            <span class="text-xs text-slate-500">Classe</span>
-            <select v-model.number="classeId" class="mt-1 w-full px-3 py-2 rounded border dark:bg-slate-900">
-              <option :value="0" disabled>— Choisir —</option>
-              <option v-for="c in school.classesView" :key="c.id" :value="c.id">{{ c.libelle }}</option>
-            </select>
-          </label>
-          <label class="block">
-            <span class="text-xs text-slate-500">Élève</span>
-            <select v-model.number="eleveId" class="mt-1 w-full px-3 py-2 rounded border dark:bg-slate-900" :disabled="!classeId">
-              <option :value="0" disabled>— Choisir —</option>
-              <option v-for="e in elevesClasse" :key="e.id" :value="e.id">{{ e.nom }}</option>
-            </select>
-          </label>
-        </div>
-
-        <div class="grid gap-2 sm:grid-cols-3">
-          <label class="block">
-            <span class="text-xs text-slate-500">Période</span>
-            <select v-model.number="periodeId" class="mt-1 w-full px-3 py-2 rounded border dark:bg-slate-900">
-              <option v-for="p in school.periodes" :key="p.id" :value="p.id">{{ p.label }}</option>
-            </select>
-          </label>
-          <label class="block sm:col-span-2">
-            <span class="text-xs text-slate-500">Cours (matière)</span>
-            <select v-model.number="coursId" class="mt-1 w-full px-3 py-2 rounded border dark:bg-slate-900" :disabled="!classeId">
-              <option :value="0" disabled>— Choisir —</option>
-              <option v-for="c in coursClasse" :key="c.id" :value="c.id">{{ c.matiere }} — {{ c.intitule }}</option>
-            </select>
-          </label>
-        </div>
-
-        <div class="grid gap-2 sm:grid-cols-3">
-          <label class="block">
-            <span class="text-xs text-slate-500">Type</span>
-            <select v-model="type" class="mt-1 w-full px-3 py-2 rounded border dark:bg-slate-900">
-              <option>Devoir</option><option>Interro</option><option>Examen</option>
-            </select>
-          </label>
-          <label class="block">
-            <span class="text-xs text-slate-500">Coef</span>
-            <input v-model.number="coef" type="number" min="1" class="mt-1 w-full px-3 py-2 rounded border dark:bg-slate-900"/>
-          </label>
-          <label class="block">
-            <span class="text-xs text-slate-500">Note (/20)</span>
-            <input v-model.number="note" type="number" step="0.5" min="0" max="20" class="mt-1 w-full px-3 py-2 rounded border dark:bg-slate-900"/>
-          </label>
-        </div>
-
-        <button class="w-full sm:w-auto px-4 py-2 rounded bg-indigo-600 text-white" :disabled="!canSave" @click="save">
-          Enregistrer
-        </button>
-      </div>
-
-      <!-- Historique élève/période -->
-      <div class="rounded-xl border p-4 bg-white dark:bg-slate-900 dark:border-slate-800">
-        <h3 class="font-semibold mb-2">Évaluations ({{ eleve?.nom || '—' }}, {{ periode?.label || '—' }})</h3>
-        <div class="overflow-x-auto">
-          <table class="min-w-full text-sm">
-            <thead class="bg-slate-50 dark:bg-slate-900/50">
-              <tr class="text-left">
-                <th class="p-3">Matière</th><th class="p-3">Type</th><th class="p-3">Coef</th><th class="p-3">Note</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="r in evals" :key="r.id || r.matiere + r.type + r.coef + r.note" class="border-t dark:border-slate-800">
-                <td class="p-3">{{ r.matiere }}</td>
-                <td class="p-3">{{ r.type }}</td>
-                <td class="p-3">{{ r.coef }}</td>
-                <td class="p-3">{{ r.note }}</td>
-              </tr>
-              <tr v-if="!evals.length"><td colspan="4" class="p-4 text-center text-slate-500">Aucune note</td></tr>
-            </tbody>
-          </table>
-        </div>
+  <div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h1 class="text-xl font-semibold">Saisie des notes</h1>
+        <p class="text-sm text-slate-500 dark:text-slate-400">
+          Choisissez la classe, le cours et la période puis saisissez les notes.
+        </p>
       </div>
     </div>
 
-  </section>
+    <!-- Filtres -->
+    <NotesFilters
+      v-model:classeId="fClasse"
+      v-model:coursId="fCours"
+      v-model:periodeId="fPeriode"
+      v-model:type="fType"
+      v-model:coef="fCoef"
+      :classes-options="classesOptions"
+      :cours-options="coursOptions"
+      :periodes-options="periodesOptions"
+    />
+
+    <!-- Bloc état -->
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <!-- loading -->
+      <div v-if="loading" class="p-6">
+        <div class="h-4 w-1/3 animate-pulse rounded bg-slate-200 dark:bg-slate-800 mb-3"></div>
+        <div class="h-4 w-full animate-pulse rounded bg-slate-200 dark:bg-slate-800 mb-2"></div>
+        <div class="h-4 w-5/6 animate-pulse rounded bg-slate-200 dark:bg-slate-800"></div>
+      </div>
+
+      <!-- erreurs -->
+      <div v-else-if="error" class="p-6 text-sm text-red-600 dark:text-red-400">{{ error }}</div>
+
+      <!-- prerequisites -->
+      <div v-else-if="!readyToEnter" class="p-6 text-sm text-slate-600 dark:text-slate-300">
+        Sélectionnez <b>classe</b>, <b>cours</b>, <b>période</b>, <b>type</b> et <b>coef</b> pour commencer.
+      </div>
+
+      <!-- aucune donnée -->
+      <div v-else-if="students.items.length === 0" class="p-6 text-sm text-slate-500 dark:text-slate-400">
+        Aucun élève trouvé pour cette classe.
+      </div>
+
+      <!-- saisie -->
+      <div v-else>
+        <NotesEntryTable
+          :students="students.items"
+          :bareme="20"
+          v-model="notesByStudent"
+          :extras="extras"
+          :saving="saving"
+          @save="saveAll"
+        />
+      </div>
+    </div>
+
+    <p v-if="savedOnce" class="text-sm text-green-600 dark:text-green-400">Enregistré ✅</p>
+  </div>
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
-import { useSchoolStore } from '@/stores/school'
-const school = useSchoolStore()
+import { computed, onMounted, ref, watch, reactive } from 'vue'
+import { useAuthStore }    from '@/stores/useAuth'
+import { useClassesStore } from '@/stores/useClasses'
+import { useCoursStore }   from '@/stores/useCours'
+import { usePeriodesStore }from '@/stores/usePeriodes'
+import { useStudentsStore }from '@/stores/useStudents'
+import { useEvaluationsStore } from '@/stores/useEvaluations'
 
-const classeId = ref(0)
-const eleveId  = ref(0)
-const coursId  = ref(0)
-const periodeId= ref(school.periodes.find(p => p.active)?.id ?? school.periodes[0]?.id ?? 0)
-const type     = ref('Devoir')
-const coef     = ref(1)
-const note     = ref(10)
+import NotesFilters     from '@/components/pedagogie/NotesFilters.vue'
+import NotesEntryTable  from '@/components/pedagogie/NotesEntryTable.vue'
 
-const elevesClasse = computed(() => school.students.filter(s => s.classeId === classeId.value))
-const coursClasse  = computed(() => school.cours.filter(c => c.classeId === classeId.value && (!periodeId.value || c.periodeId === periodeId.value)))
-const eleve        = computed(() => school.getStudent(eleveId.value))
-const periode      = computed(() => school.getPeriode(periodeId.value))
+const auth     = useAuthStore()
+const classes  = useClassesStore()
+const cours    = useCoursStore()
+const periodes = usePeriodesStore()
+const students = useStudentsStore()
+const evals    = useEvaluationsStore()
 
-watch(classeId, () => { eleveId.value = 0; coursId.value = 0 })
+// sélections
+const fClasse  = ref('')
+const fCours   = ref('')
+const fPeriode = ref('')
+const fType    = ref('Devoir')
+const fCoef    = ref(1)
 
-const evals = computed(() => eleveId.value && periodeId.value ? school.getEvaluations(eleveId.value, periodeId.value) : [])
+// état local
+const notesByStudent = ref({}) // { eleveId: note }
+const saving = ref(false)
+const savedOnce = ref(false)
+const error = ref(null)
 
-const canSave = computed(() => !!(classeId.value && eleveId.value && coursId.value && periodeId.value && coef.value > 0))
+// chargement de base
+onMounted(async () => {
+  await Promise.all([
+    classes.fetch(),
+    periodes.fetch(),
+    cours.fetch({ _sort: 'code' }),
+  ])
+})
 
-function save(){
-  const cours = school.coursById[coursId.value]
-  if(!cours) return
-  school.upsertEvaluation({
-    eleveId: Number(eleveId.value),
-    periodeId: Number(periodeId.value),
-    matiere: cours.matiere,
-    type: type.value,
-    coef: Number(coef.value),
-    note: Number(note.value),
-    obs: '',
-  })
+// options filtrées
+const classesOptions = computed(() =>
+  (classes.items||[]).map(c => ({ value: String(c.id), label: c.libelle || c.label || c.code }))
+)
+
+const coursOptions = computed(() => {
+  const clsId = Number(fClasse.value || 0)
+  const role = auth.role
+  const userId = auth.user?.id
+  return (cours.items||[])
+    .filter(c => (clsId ? c.classeId === clsId : true))
+    .filter(c => (role === 'PROFESSEUR' && userId ? c.teacherId === userId : true))
+    .map(c => ({ value: String(c.id), label: `${c.code} • ${c.intitule}` }))
+})
+
+const periodesOptions = computed(() =>
+  (periodes.items||[]).map(p => ({ value: String(p.id), label: p.label }))
+)
+
+const loading = computed(() =>
+  classes.loading || cours.loading || periodes.loading || students.loading || evals.loading
+)
+
+// prêt à saisir ?
+const readyToEnter = computed(() =>
+  !!(fClasse.value && fCours.value && fPeriode.value && fType.value && Number(fCoef.value) > 0)
+)
+
+// extras (optionnel — par ex. classe affichée par ligne mobile)
+const extras = computed(() => ({}))
+
+// quand la classe change → charger élèves de la classe
+watch(fClasse, async (val) => {
+  notesByStudent.value = {}
+  if (!val) return
+  await students.fetch({ classeId: Number(val) }) // json-server: /students?classeId=XX
+})
+
+// recharger les évaluations existantes pour (cours, période, type, coef)
+watch([fCours, fPeriode, fType, fCoef], async () => {
+  notesByStudent.value = {}
+  if (!readyToEnter.value) return
+  error.value = null
+  try {
+    // on identifie la matière via le cours choisi
+    const c = (cours.items||[]).find(x => String(x.id) === String(fCours.value))
+    const matiere = c?.matiere || c?.intitule || ''
+    if (!matiere) return
+
+    // Récupère les évaluations existantes correspondantes
+    // /evaluations?periodeId=...&matiere=...&type=...&coef=...
+    const existing = await evals.fetch({
+      periodeId: Number(fPeriode.value),
+      matiere,
+      type: fType.value,
+      coef: Number(fCoef.value),
+      _limit: 1000,
+    })
+
+    // pré-remplir notes par élève
+    const map = {}
+    existing.forEach(e => { if (e.eleveId != null) map[e.eleveId] = e.note })
+    notesByStudent.value = map
+  } catch (e) {
+    error.value = e?.message || 'Erreur de chargement des notes'
+  }
+})
+
+// Enregistrement en masse (upsert par élève)
+async function saveAll() {
+  if (!readyToEnter.value) return
+  saving.value = true; error.value = null
+  try {
+    const c = (cours.items||[]).find(x => String(x.id) === String(fCours.value))
+    const matiere = c?.matiere || c?.intitule || ''
+    const periodeId = Number(fPeriode.value)
+    const type = fType.value
+    const coef = Number(fCoef.value)
+
+    // on récupère les évaluations existantes (id par eleveId) pour éviter N requêtes unitaires
+    const existing = await evals.fetch({ periodeId, matiere, type, coef, _limit: 1000 })
+    const byEleveId = Object.fromEntries((existing||[]).map(e => [e.eleveId, e]))
+
+    const ops = []
+    for (const s of (students.items||[])) {
+      const note = notesByStudent.value[s.id]
+      if (note === '' || note == null || isNaN(Number(note))) continue
+
+      const payload = {
+        eleveId: s.id,
+        periodeId,
+        matiere,
+        type,
+        coef,
+        note: Number(note),
+        obs: '', // champ libre si besoin
+      }
+
+      if (byEleveId[s.id]?.id) {
+        ops.push(evals.updateOne(byEleveId[s.id].id, payload))
+      } else {
+        ops.push(evals.createOne(payload))
+      }
+    }
+
+    await Promise.all(ops)
+    savedOnce.value = true
+  } catch (e) {
+    error.value = e?.message || 'Erreur lors de l’enregistrement'
+  } finally {
+    saving.value = false
+  }
 }
 </script>

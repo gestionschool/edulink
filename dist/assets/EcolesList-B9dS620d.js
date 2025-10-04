@@ -1,1 +1,0 @@
-import{_ as e}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{a as o,o as c}from"./index-C5nwF8dZ.js";const t={};function r(s,n){return c(),o("div",null,"EcolesList")}const l=e(t,[["render",r]]);export{l as default};

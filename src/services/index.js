@@ -1,0 +1,13 @@
+// src/services/index.js
+export { EcolesService }        from './ecoles'
+export { UsersService }         from './users'
+export { StudentsService }      from './students'
+export { ClassesService }       from './classes'
+export { PeriodesService }      from './periodes'
+export { TeachersService }      from './teachers'
+export { CoursService }         from './cours'
+export { EvaluationsService }   from './evaluations'
+export { BulletinsMetaService } from './bulletinsMeta'
+export { InterrosService }      from './interros'
+export { ExamensService }       from './examens'
+export { DevoirsService }       from './devoirs'

@@ -1,4 +1,5 @@
 // src/services/crud.js
+
 import { http } from './http'
 
 export const makeCrudService = (resource) => ({

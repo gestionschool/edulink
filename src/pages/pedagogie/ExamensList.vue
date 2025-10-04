@@ -1,176 +1,158 @@
+<!-- src/pages/pedagogie/ExamensList.vue -->
 <template>
-  <section class="space-y-5">
+  <div class="space-y-6">
     <!-- Header -->
-    <header class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h1 class="text-xl font-semibold">Examens</h1>
-        <p class="text-sm text-slate-500 dark:text-slate-400">Évaluations majeures</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400">
+          Gestion des examens par cours / classe / période
+        </p>
       </div>
 
-      <!-- Formulaire : fluide mobile, compact desktop -->
-      <form @submit.prevent="add" class="flex flex-wrap gap-2">
-        <input
-          v-model="form.titre"
-          placeholder="Titre"
-          class="w-full sm:w-auto sm:flex-1 min-w-[180px] px-3 py-2 rounded border dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-          required
-        />
-        <input
-          v-model="form.date" type="date"
-          class="w-full sm:w-auto min-w-[160px] px-3 py-2 rounded border dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-          required
-        />
-        <select
-          v-model.number="form.coursId"
-          class="w-full sm:w-auto min-w-[220px] px-3 py-2 rounded border dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-          required
-        >
-          <option :value="0" disabled>— Cours —</option>
-          <option v-for="c in school.cours" :key="c.id" :value="c.id">
-            {{ c.matiere }} — {{ classeLabel(c.classeId) }}
-          </option>
-        </select>
-        <select
-          v-model="form.type"
-          class="w-full sm:w-auto min-w-[140px] px-3 py-2 rounded border dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-        >
-          <option>Final</option>
-          <option>Partiel</option>
-        </select>
-        <select
-          v-model="form.session"
-          class="w-full sm:w-auto min-w-[160px] px-3 py-2 rounded border dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-        >
-          <option>Normale</option>
-          <option>Rattrapage</option>
-        </select>
-        <input
-          v-model.number="form.bareme" type="number" min="1" placeholder="Barème"
-          class="w-full sm:w-24 px-3 py-2 rounded border dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-        />
-        <button class="w-full sm:w-auto px-3 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700 transition">
-          Ajouter
-        </button>
-      </form>
-    </header>
+      <RouterLink
+        to="/examens/nouveau"
+        class="inline-flex items-center gap-2 rounded-lg border border-violet-200 bg-violet-600 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-violet-700 dark:border-violet-900"
+      >
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"/></svg>
+        Nouvel examen
+      </RouterLink>
+    </div>
 
     <!-- Filtres -->
-    <div class="flex flex-wrap gap-2">
-      <select v-model="filterCours" class="w-full sm:w-auto min-w-[180px] px-3 py-2 rounded border dark:bg-slate-900">
-        <option value="">Tous cours</option>
-        <option v-for="o in school.uniqueExamCours" :key="o">{{ o }}</option>
-      </select>
-      <select v-model="filterClasse" class="w-full sm:w-auto min-w-[160px] px-3 py-2 rounded border dark:bg-slate-900">
-        <option value="">Toutes classes</option>
-        <option v-for="o in school.uniqueExamClasses" :key="o">{{ o }}</option>
-      </select>
-      <select v-model="filterSession" class="w-full sm:w-auto min-w-[160px] px-3 py-2 rounded border dark:bg-slate-900">
-        <option value="">Toutes sessions</option>
-        <option v-for="o in school.uniqueExamSessions" :key="o">{{ o }}</option>
-      </select>
-    </div>
+    <ExamensFilters
+      v-model:search="q"
+      v-model:classeId="fClasse"
+      v-model:coursId="fCours"
+      v-model:periodeId="fPeriode"
+      v-model:type="fType"
+      v-model:session="fSession"
+      :classes-options="classesOptions"
+      :cours-options="coursOptions"
+      :periodes-options="periodesOptions"
+      :types-options="typesOptions"
+      :sessions-options="sessionsOptions"
+    />
 
-    <!-- LISTE MOBILE (cartes) -->
-    <ul class="sm:hidden space-y-3">
-      <li
-        v-for="e in filtered"
-        :key="e.id"
-        class="rounded-xl border dark:border-slate-800 bg-white dark:bg-slate-900 p-4"
-      >
-        <div class="flex items-start justify-between gap-3">
-          <div class="min-w-0">
-            <h3 class="font-semibold truncate">{{ e.titre }}</h3>
-            <p class="text-sm text-slate-600 dark:text-slate-400 truncate">
-              {{ e.cours }} — {{ e.classe }}
-            </p>
-            <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
-              <span>Date : {{ e.date }}</span>
-              <span class="mx-1 hidden xs:inline">•</span>
-              <span class="flex items-center gap-2">
-                <span :class="['px-2 py-0.5 rounded-full', typeClass(e.type)]">{{ e.type }}</span>
-                <span :class="['px-2 py-0.5 rounded-full', sessionClass(e.session)]">{{ e.session }}</span>
-              </span>
-            </div>
-          </div>
-          <button class="text-xs text-red-600 hover:underline shrink-0" @click="school.removeExamen(e.id)">Supprimer</button>
-        </div>
-      </li>
-      <li v-if="!filtered.length" class="rounded-xl border dark:border-slate-800 p-4 text-center text-slate-500">
-        Aucun examen
-      </li>
-    </ul>
+    <!-- Bloc état + table/cards -->
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div v-if="loading" class="p-6">
+        <div class="h-4 w-1/3 animate-pulse rounded bg-slate-200 dark:bg-slate-800 mb-3"></div>
+        <div class="h-4 w-full animate-pulse rounded bg-slate-200 dark:bg-slate-800 mb-2"></div>
+        <div class="h-4 w-5/6 animate-pulse rounded bg-slate-200 dark:bg-slate-800"></div>
+      </div>
 
-    <!-- TABLEAU ≥ sm -->
-    <div class="hidden sm:block overflow-x-auto rounded-xl border dark:border-slate-800">
-      <table class="min-w-full text-sm">
-        <thead class="bg-slate-50 dark:bg-slate-900/50">
-          <tr class="text-left">
-            <th class="p-3">Titre</th>
-            <th class="p-3">Type</th>
-            <th class="p-3">Session</th>
-            <th class="p-3">Date</th>
-            <th class="p-3">Cours</th>
-            <th class="p-3 hidden md:table-cell">Classe</th>
-            <th class="p-3 w-1"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="e in filtered" :key="e.id" class="border-t dark:border-slate-800">
-            <td class="p-3 font-medium truncate">{{ e.titre }}</td>
-            <td class="p-3">
-              <span :class="['px-2 py-0.5 text-xs rounded-full', typeClass(e.type)]">{{ e.type }}</span>
-            </td>
-            <td class="p-3">
-              <span :class="['px-2 py-0.5 text-xs rounded-full', sessionClass(e.session)]">{{ e.session }}</span>
-            </td>
-            <td class="p-3">{{ e.date }}</td>
-            <td class="p-3 truncate">{{ e.cours }}</td>
-            <td class="p-3 hidden md:table-cell">{{ e.classe }}</td>
-            <td class="p-3 text-right">
-              <button class="text-red-600 hover:underline" @click="school.removeExamen(e.id)">Supprimer</button>
-            </td>
-          </tr>
-          <tr v-if="!filtered.length"><td colspan="7" class="p-4 text-center text-slate-500">Aucun examen</td></tr>
-        </tbody>
-      </table>
+      <div v-else-if="error" class="p-6 text-sm text-red-600 dark:text-red-400">{{ error }}</div>
+
+      <div v-else-if="rows.length === 0" class="p-6 text-sm text-slate-500 dark:text-slate-400">
+        Aucun examen trouvé.
+      </div>
+
+      <div v-else class="overflow-x-auto">
+        <ExamensTable :items="rows" :total="total" @remove="onRemove" />
+      </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script setup>
-import { reactive, ref, computed } from 'vue'
-import { useSchoolStore } from '@/stores/school'
+import { computed, onMounted, ref } from 'vue'
+import { RouterLink } from 'vue-router'
 
-const school = useSchoolStore()
-const classeLabel = (id) => school.getClasse(id)?.libelle || school.getClasse(id)?.label || '—'
+import { useExamensStore } from '@/stores/useExamens'
+import { useCoursStore }    from '@/stores/useCours'
+import { useClassesStore }  from '@/stores/useClasses'
+import { usePeriodesStore } from '@/stores/usePeriodes'
+import { useTeachersStore } from '@/stores/useTeachers'
 
-const form = reactive({ titre:'', type:'Final', session:'Normale', date:'', coursId:0, bareme:20 })
-function add(){
-  if(!form.titre || !form.date || !form.coursId) return
-  school.addExamen({ ...form, coursId: Number(form.coursId) })
-  Object.assign(form, { titre:'', type:'Final', session:'Normale', date:'', coursId:0, bareme:20 })
-}
+import ExamensFilters from '@/components/pedagogie/ExamensFilters.vue'
+import ExamensTable   from '@/components/pedagogie/ExamensTable.vue'
 
-const filterCours = ref('')
-const filterClasse = ref('')
-const filterSession = ref('')
+const examens  = useExamensStore()
+const cours    = useCoursStore()
+const classes  = useClassesStore()
+const periodes = usePeriodesStore()
+const teachers = useTeachersStore()
 
-const filtered = computed(() =>
-  school.examensView.filter(e =>
-    (!filterCours.value   || e.cours   === filterCours.value) &&
-    (!filterClasse.value  || e.classe  === filterClasse.value) &&
-    (!filterSession.value || e.session === filterSession.value)
-  )
+onMounted(async () => {
+  await Promise.all([
+    classes.fetch(),
+    periodes.fetch(),
+    teachers.fetch(),
+    cours.fetch({ _sort: 'code' }),
+    examens.fetch({ _sort: 'date', _order: 'desc' }),
+  ])
+})
+
+const coursById   = computed(() => Object.fromEntries((cours.items||[]).map(c => [c.id, c])))
+const classById   = computed(() => Object.fromEntries((classes.items||[]).map(c => [c.id, c])))
+const periodById  = computed(() => Object.fromEntries((periodes.items||[]).map(p => [p.id, p])))
+const teacherById = computed(() => Object.fromEntries((teachers.items||[]).map(t => [t.id, t])))
+
+/* Filtres contrôlés */
+const q = ref('')
+const fClasse  = ref('')
+const fCours   = ref('')
+const fPeriode = ref('')
+const fType    = ref('')
+const fSession = ref('')
+
+/* Options pour les selects */
+const classesOptions = computed(() =>
+  (classes.items||[]).map(c => ({ value: String(c.id), label: c.libelle || c.label || c.code }))
 )
+const coursOptions = computed(() =>
+  (cours.items||[]).map(c => ({ value: String(c.id), label: `${c.code} • ${c.intitule}` }))
+)
+const periodesOptions = computed(() =>
+  (periodes.items||[]).map(p => ({ value: String(p.id), label: p.label }))
+)
+const typesOptions = computed(() => {
+  const vals = new Set((examens.items||[]).map(r => r.type).filter(Boolean))
+  return Array.from(vals).sort().map(s => ({ value: s, label: s }))
+})
+const sessionsOptions = computed(() => {
+  const vals = new Set((examens.items||[]).map(r => r.session).filter(Boolean))
+  return Array.from(vals).sort().map(s => ({ value: s, label: s }))
+})
 
-function typeClass(t){
-  return t === 'Partiel'
-    ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200'
-    : 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-200'
-}
-function sessionClass(s){
-  return s === 'Rattrapage'
-    ? 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-200'
-    : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200'
+/* Vue jointe + filtrage */
+const rows = computed(() => {
+  const term = q.value.trim().toLowerCase()
+  return (examens.items||[])
+    .map(r => {
+      const c  = coursById.value[r.coursId]
+      const cl = c ? classById.value[c.classeId] : null
+      const pr = periodById.value[c?.periodeId ?? null]
+      const t  = c ? teacherById.value[c.teacherId] : null
+      return {
+        ...r,
+        _coursLabel:   c ? `${c.code} • ${c.intitule}` : '—',
+        _matiere:      c?.matiere || '—',
+        _classeLabel:  cl ? (cl.libelle || cl.label || cl.code) : '—',
+        _periodeLabel: pr ? pr.label : '—',
+        _profLabel:    t ? (t.nom || `${t.prenom ?? ''} ${t.nom ?? ''}`.trim()) : '—',
+      }
+    })
+    .filter(r => {
+      if (fClasse.value  && String(coursById.value[r.coursId]?.classeId) !== fClasse.value) return false
+      if (fCours.value   && String(r.coursId) !== fCours.value) return false
+      if (fPeriode.value && String(coursById.value[r.coursId]?.periodeId) !== fPeriode.value) return false
+      if (fType.value    && r.type !== fType.value) return false
+      if (fSession.value && r.session !== fSession.value) return false
+      if (!term) return true
+      const hay = `${r.titre} ${r.type} ${r.session} ${r._coursLabel} ${r._matiere} ${r._classeLabel} ${r._profLabel} ${r._periodeLabel}`.toLowerCase()
+      return hay.includes(term)
+    })
+})
+
+const total   = computed(() => examens.items?.length || 0)
+const loading = computed(() => examens.loading || cours.loading || classes.loading || periodes.loading || teachers.loading)
+const error   = computed(() => examens.error   || cours.error   || classes.error   || periodes.error   || teachers.error)
+
+async function onRemove(id){
+  if (!confirm('Supprimer cet examen ?')) return
+  await examens.removeOne(id)
+  await examens.fetch({ _sort: 'date', _order: 'desc' })
 }
 </script>

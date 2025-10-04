@@ -1,148 +1,136 @@
+<!-- src/pages/pedagogie/CoursList.vue -->
 <template>
-  <section class="space-y-5">
+  <div class="space-y-6">
     <!-- Header -->
-    <header class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h1 class="text-xl font-semibold">Cours / Matières</h1>
-        <p class="text-sm text-slate-500 dark:text-slate-400">Affectations par classe & professeur</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400">
+          Liaison classe ⇄ matière ⇄ professeur ⇄ période
+        </p>
       </div>
 
-      <!-- Formulaire : fluide en mobile, compact en grand écran -->
-      <form @submit.prevent="add" class="flex flex-wrap gap-2">
-        <input
-          v-model="form.code"
-          placeholder="Code (ex: MAT101)"
-          class="w-full sm:w-auto sm:flex-1 min-w-[160px] px-3 py-2 rounded border dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-          required
-        />
-        <input
-          v-model="form.matiere"
-          placeholder="Matière"
-          class="w-full sm:w-auto sm:flex-1 min-w-[160px] px-3 py-2 rounded border dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-          required
-        />
-        <input
-          v-model="form.intitule"
-          placeholder="Intitulé"
-          class="w-full sm:w-auto sm:flex-1 min-w-[200px] px-3 py-2 rounded border dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-          required
-        />
-
-        <select
-          v-model.number="form.classeId"
-          class="w-full sm:w-auto min-w-[160px] px-3 py-2 rounded border dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-          required
-        >
-          <option :value="0" disabled>— Classe —</option>
-          <option v-for="c in school.classesView" :key="c.id" :value="c.id">{{ c.libelle }}</option>
-        </select>
-
-        <select
-          v-model.number="form.teacherId"
-          class="w-full sm:w-auto min-w-[180px] px-3 py-2 rounded border dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-          required
-        >
-          <option :value="0" disabled>— Professeur —</option>
-          <option v-for="t in school.teachers" :key="t.id" :value="t.id">{{ t.nom }} ({{ t.matiere }})</option>
-        </select>
-
-        <select
-          v-model.number="form.periodeId"
-          class="w-full sm:w-auto min-w-[160px] px-3 py-2 rounded border dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-          required
-        >
-          <option :value="0" disabled>— Période —</option>
-          <option v-for="p in school.periodes" :key="p.id" :value="p.id">{{ p.label }}</option>
-        </select>
-
-        <input
-          v-model.number="form.volume" type="number" min="0" placeholder="Volume"
-          class="w-full sm:w-28 px-3 py-2 rounded border dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-        />
-
-        <button class="w-full sm:w-auto px-3 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700 transition">
-          Ajouter
-        </button>
-      </form>
-    </header>
-
-    <!-- LISTE MOBILE (cartes) -->
-    <ul class="sm:hidden space-y-3">
-      <li
-        v-for="c in school.coursView"
-        :key="c.id"
-        class="rounded-xl border dark:border-slate-800 bg-white dark:bg-slate-900 p-4"
+      <RouterLink
+        to="/cours/nouveau"
+        class="inline-flex items-center gap-2 rounded-lg border border-violet-200 bg-violet-600 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-violet-700 dark:border-violet-900"
       >
-        <div class="flex items-start justify-between gap-3">
-          <div class="min-w-0">
-            <h3 class="font-semibold truncate">
-              {{ c.code }} • {{ c.intitule }}
-            </h3>
-            <p class="text-sm text-slate-600 dark:text-slate-400 truncate">
-              {{ c.matiere }} — {{ c.classe }}
-            </p>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Prof: {{ c.professeur }} • Période: {{ c.periode }}
-            </p>
-          </div>
-          <button
-            class="shrink-0 text-red-600 hover:underline"
-            @click="school.removeCours(c.id)"
-          >
-            Supprimer
-          </button>
-        </div>
-      </li>
-      <li v-if="!school.coursView.length" class="rounded-xl border dark:border-slate-800 p-4 text-center text-slate-500">
-        Aucun cours
-      </li>
-    </ul>
-
-    <!-- TABLEAU ≥ sm -->
-    <div class="hidden sm:block overflow-x-auto rounded-xl border dark:border-slate-800">
-      <table class="min-w-full text-sm">
-        <thead class="bg-slate-50 dark:bg-slate-900/50">
-          <tr class="text-left">
-            <th class="p-3">Code</th>
-            <th class="p-3 hidden md:table-cell">Intitulé</th>
-            <th class="p-3 hidden lg:table-cell">Matière</th>
-            <th class="p-3">Classe</th>
-            <th class="p-3">Professeur</th>
-            <th class="p-3 hidden xl:table-cell">Période</th>
-            <th class="p-3 w-1"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="c in school.coursView" :key="c.id" class="border-t dark:border-slate-800">
-            <td class="p-3 font-medium">{{ c.code }}</td>
-            <td class="p-3 hidden md:table-cell truncate">{{ c.intitule }}</td>
-            <td class="p-3 hidden lg:table-cell truncate">{{ c.matiere }}</td>
-            <td class="p-3">{{ c.classe }}</td>
-            <td class="p-3 truncate">{{ c.professeur }}</td>
-            <td class="p-3 hidden xl:table-cell">{{ c.periode }}</td>
-            <td class="p-3 text-right">
-              <button class="text-red-600 hover:underline" @click="school.removeCours(c.id)">Supprimer</button>
-            </td>
-          </tr>
-          <tr v-if="!school.coursView.length">
-            <td colspan="7" class="p-4 text-center text-slate-500">Aucun cours</td>
-          </tr>
-        </tbody>
-      </table>
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"/></svg>
+        Nouveau cours
+      </RouterLink>
     </div>
-  </section>
+
+    <!-- Filtres -->
+    <CoursFilters
+      v-model:search="q"
+      v-model:classeId="fClasse"
+      v-model:profId="fProf"
+      v-model:periodeId="fPeriode"
+      :classes-options="classesOptions"
+      :profs-options="profsOptions"
+      :periodes-options="periodesOptions"
+    />
+
+    <!-- État / Table -->
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div v-if="loading" class="p-6">
+        <div class="h-4 w-1/3 animate-pulse rounded bg-slate-200 dark:bg-slate-800 mb-3"></div>
+        <div class="h-4 w-full animate-pulse rounded bg-slate-200 dark:bg-slate-800 mb-2"></div>
+        <div class="h-4 w-5/6 animate-pulse rounded bg-slate-200 dark:bg-slate-800"></div>
+      </div>
+
+      <div v-else-if="error" class="p-6 text-sm text-red-600 dark:text-red-400">{{ error }}</div>
+
+      <div v-else-if="rows.length === 0" class="p-6 text-sm text-slate-500 dark:text-slate-400">
+        Aucun cours trouvé.
+      </div>
+
+      <div v-else class="overflow-x-auto">
+        <CoursTable :items="rows" :total="total" @remove="onRemove" />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
-import { reactive } from 'vue'
-import { useSchoolStore } from '@/stores/school'
-const school = useSchoolStore()
-const form = reactive({ code:'', matiere:'', intitule:'', classeId:0, teacherId:0, periodeId:0, volume:0 })
+import { computed, onMounted, ref } from 'vue'
+import { RouterLink } from 'vue-router'
+import { useCoursStore } from '@/stores/useCours'
+import { useClassesStore } from '@/stores/useClasses'
+import { useTeachersStore } from '@/stores/useTeachers'
+import { usePeriodesStore } from '@/stores/usePeriodes'
+import CoursFilters from '@/components/pedagogie/CoursFilters.vue'
+import CoursTable from '@/components/pedagogie/CoursTable.vue'
 
-function add(){
-  const { code, matiere, intitule, classeId, teacherId, periodeId } = form
-  if(!code || !matiere || !intitule || !classeId || !teacherId || !periodeId) return
-  school.addCours({ ...form, classeId:Number(classeId), teacherId:Number(teacherId), periodeId:Number(periodeId) })
-  Object.assign(form, { code:'', matiere:'', intitule:'', classeId:0, teacherId:0, periodeId:0, volume:0 })
+const cours = useCoursStore()
+const classes = useClassesStore()
+const teachers = useTeachersStore()
+const periodes = usePeriodesStore()
+
+// Chargement initial (toutes listes nécessaires pour les jointures + options)
+onMounted(async () => {
+  await Promise.all([
+    classes.fetch(),
+    teachers.fetch(),
+    periodes.fetch(),
+    cours.fetch({ _sort: 'code' }),
+  ])
+})
+
+// Maps rapides
+const classById   = computed(() => Object.fromEntries((classes.items||[]).map(c => [c.id, c])))
+const teacherById = computed(() => Object.fromEntries((teachers.items||[]).map(t => [t.id, t])))
+const periodById  = computed(() => Object.fromEntries((periodes.items||[]).map(p => [p.id, p])))
+
+// Filtres (contrôlés par parent et passés aux composants)
+const q = ref('')
+const fClasse = ref('')
+const fProf = ref('')
+const fPeriode = ref('')
+
+// Options (dérivées des listes)
+const classesOptions = computed(() =>
+  (classes.items||[]).map(c => ({ value: String(c.id), label: c.libelle || c.label || c.code }))
+)
+const profsOptions = computed(() =>
+  (teachers.items||[]).map(t => ({ value: String(t.id), label: t.nom || `${t.prenom ?? ''} ${t.nom ?? ''}`.trim() }))
+)
+const periodesOptions = computed(() =>
+  (periodes.items||[]).map(p => ({ value: String(p.id), label: p.label }))
+)
+
+// Vue jointe
+const rows = computed(() => {
+  const term = q.value.trim().toLowerCase()
+  return (cours.items||[])
+    .map(c => {
+      const cl  = classById.value[c.classeId]
+      const tr  = teacherById.value[c.teacherId]
+      const pr  = periodById.value[c.periodeId]
+      return {
+        ...c,
+        _classeLabel:  cl ? (cl.libelle || cl.label || cl.code) : '—',
+        _profLabel:    tr ? (tr.nom || `${tr.prenom ?? ''} ${tr.nom ?? ''}`.trim()) : '—',
+        _periodeLabel: pr ? pr.label : '—',
+      }
+    })
+    .filter(r => {
+      if (fClasse.value && String(r.classeId) !== fClasse.value) return false
+      if (fProf.value   && String(r.teacherId) !== fProf.value)   return false
+      if (fPeriode.value&& String(r.periodeId) !== fPeriode.value)return false
+      if (!term) return true
+      const hay = `${r.code} ${r.intitule} ${r.matiere} ${r._classeLabel} ${r._profLabel} ${r._periodeLabel}`.toLowerCase()
+      return hay.includes(term)
+    })
+})
+
+const total   = computed(() => cours.items?.length || 0)
+const loading = computed(() => cours.loading || classes.loading || teachers.loading || periodes.loading)
+const error   = computed(() => cours.error || classes.error || teachers.error || periodes.error)
+
+// Suppression
+async function onRemove(id){
+  if (!confirm('Supprimer ce cours ?')) return
+  await cours.removeOne(id)
+  await cours.fetch()
 }
 </script>

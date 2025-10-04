@@ -138,6 +138,7 @@ const sections = [
         { to: '/filieres', prefix: '/filieres', label: 'Filières' },
         { to: '/niveaux',  prefix: '/niveaux',  label: 'Niveaux' },
         { to: '/emplois',  prefix: '/emplois',  label: 'Emplois du temps' },
+        { to: '/emplois/mes',  prefix: '/emplois/mes',  label: 'Mon Emplois du temps' },
       ],
     },
     {
@@ -166,6 +167,22 @@ const sections = [
         { to: '/examens',   prefix: '/examens',   label: 'Examens' },
         { to: '/notes',     prefix: '/notes',     label: 'Saisie des notes' },
         { to: '/bulletins', prefix: '/bulletins', label: 'Bulletins' },
+        { to:'/bulletin/recherche', prefix:'/bulletin/recherche', label:'Recherche bulletins' },
+      ],
+    },
+  ]},
+
+  // ─── 🗓️ Présences (MVP) ───────────────────────────────────────────
+  { title: 'Présences', items: [
+    {
+      key: 'attendance',
+      label: 'Présences',
+      icon: 'check',
+      roles: [ROLES.ADMIN_GENERALE, ROLES.PROFESSEUR, ROLES.ADMIN_ECOLE],
+      children: [
+        { to: '/presences/marque', prefix: '/presences/marque', label: 'Marquer la présence' },
+        { to: '/presences/liste', prefix: '/presences/liste', label: 'liste de présence' },
+        { to: '/presences/stats', prefix: '/presences/stats', label: 'stat de presence' },
       ],
     },
   ]},
@@ -244,6 +261,8 @@ function iconSvg(name){
     layers:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 1 9l11 6 11-6-11-6zm0 9L1 18l11 6 11-6-11-6z"/></svg>',
     book:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12V2zM6 4h10v14H6a2 2 0 0 0-2 2V4z"/></svg>',
     chart:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h2v18H3zM8 13h2v8H8zM13 9h2v12h-2zM18 5h2v16h-2z"/></svg>',
+    check:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>',
+
   }
   return icons[name] ?? icons.layers
 }
