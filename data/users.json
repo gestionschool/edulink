@@ -1,3 +1,11 @@
 [
-  { "id": 1, "email": "admin@demo.test", "password": "admin", "name": "Admin" }
+  { "id": "1", "name": "Super Admin", "role": "ADMIN_GENERALE", "email": "admin@example.com", "password": "admin" },
+  { "id": "2", "name": "Admin E1", "role": "ADMIN_ECOLE", "ecoleId": 1, "email": "e1@example.com", "password": "e1" },
+  { "id": "3", "name": "Admin E2", "role": "ADMIN_ECOLE", "ecoleId": 2, "email": "e2@example.com", "password": "e2" },
+  { "id": "4", "name": "Professeur 1", "role": "PROFESSEUR", "ecoleId": 1, "email": "prof1@example.com", "password": "prof1" },
+  { "id": "5", "name": "Professeur 2", "role": "PROFESSEUR", "ecoleId": 2, "email": "prof2@example.com", "password": "prof2" },
+  { "id": "6", "name": "Parent 1", "role": "PARENT", "ecoleId": 1, "email": "parent1@example.com", "password": "parent1" },
+  { "id": "7", "name": "Parent 2", "role": "PARENT", "ecoleId": 2, "email": "parent2@example.com", "password": "parent2" },
+  { "id": "8", "name": "Eleve 1", "role": "ELEVE", "ecoleId": 1, "email": "eleve1@example.com", "password": "eleve1" },
+  { "id": "9", "name": "Eleve 2", "role": "ELEVE", "ecoleId": 2, "email": "eleve2@example.com", "password": "eleve2" }
 ]
